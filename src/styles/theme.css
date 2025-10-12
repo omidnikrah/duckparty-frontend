@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #f1571f;
+  --color-primary-700: #d14d1e;
+
+  --color-duck: #fecd03;
+
+  --font-family: "Modak";
+}
