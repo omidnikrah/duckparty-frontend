@@ -1,13 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Asul:wght@400;700&family=Modak&display=swap");
-
 @import "./theme.css";
 
 body,
 html {
   height: 100%;
   font-family: "Modak", sans-serif;
+  overflow: hidden;
 }
 
 #root {
   height: 100%;
+}
+
+button {
+  cursor: pointer;
 }
