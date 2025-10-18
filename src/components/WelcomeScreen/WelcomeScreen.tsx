@@ -6,9 +6,9 @@ interface IWelcomeScreenProps {
   onCreateClick: () => void;
 }
 
-export function WelcomeScreen(props: IWelcomeScreenProps) {
+export const WelcomeScreen = (props: IWelcomeScreenProps) => {
   return (
-    <div class="relative z-10 flex flex-col items-center justify-center">
+    <div class="absolute inset-0 z-10 flex h-fit flex-col items-center justify-center">
       <Presence>
         <Show when={props.visible}>
           <Motion.img
@@ -18,7 +18,7 @@ export function WelcomeScreen(props: IWelcomeScreenProps) {
             transition={{ delay: 0.05, duration: 0.4 }}
             src="/logo.svg"
             alt="logo"
-            class="w-11/12 translate-y-[-14dvh]"
+            class="w-11/12"
           />
         </Show>
       </Presence>
@@ -29,7 +29,7 @@ export function WelcomeScreen(props: IWelcomeScreenProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.4 }}
-            class="translate-y-[-8dvh] rounded-full bg-primary px-8 py-4 text-3xl text-white transition-transform hover:scale-105"
+            class="mt-10 rounded-full bg-primary px-8 py-4 text-3xl text-white transition-transform hover:scale-105"
             onClick={props.onCreateClick}
             type="button"
           >
@@ -39,4 +39,4 @@ export function WelcomeScreen(props: IWelcomeScreenProps) {
       </Presence>
     </div>
   );
-}
+};
