@@ -1,0 +1,43 @@
+.tab-content {
+  view-transition-name: tab-content;
+}
+
+::view-transition-old(tab-content),
+::view-transition-new(tab-content) {
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+::view-transition-old(tab-content) {
+  animation-name: spring-out;
+}
+
+::view-transition-new(tab-content) {
+  animation-name: spring-in;
+}
+
+@keyframes spring-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(1px);
+  }
+}
+
+@keyframes spring-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
