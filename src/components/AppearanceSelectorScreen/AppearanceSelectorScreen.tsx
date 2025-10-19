@@ -1,6 +1,8 @@
 import { Show } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
 import { Tab } from "@/components";
+import { AccessoriesSelectorTab } from "./AccessoriesSelectorTab";
+import { SkinSelectorTab } from "./SkinSelectorTab";
 
 interface IAppearanceSelectorScreenProps {
   visible: boolean;
@@ -24,12 +26,12 @@ export const AppearanceSelectorScreen = (
               {
                 id: "skin",
                 label: "Skin",
-                content: <div>Skin</div>,
+                content: <SkinSelectorTab />,
               },
               {
                 id: "accessories",
                 label: "Accessories",
-                content: <div>Accessories</div>,
+                content: <AccessoriesSelectorTab />,
               },
             ]}
           />
