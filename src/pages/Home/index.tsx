@@ -5,6 +5,10 @@ import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen"
 
 export default function Home() {
   const [isCreatingOwnDuck, setIsCreatingOwnDuck] = createSignal(false);
+  const circleCommonClasses =
+    "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
+  const circleExpandedClasses =
+    "h-[max(calc(100dvw-5dvh),1200px)] w-[max(calc(100dvw-5dvh),1200px)]";
 
   const createOwnDuck = () => {
     setIsCreatingOwnDuck(true);
@@ -15,13 +19,14 @@ export default function Home() {
       <img src="/body.png" alt="body" class="fixed top-0 z-12 w-[50dvh]" />
       <div
         class={clsx(
-          "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex h-[75dvh] w-[75dvh] flex-col items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_0_45px_20px_rgba(0,0,0,0.05)] transition-all duration-900 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          circleCommonClasses,
+          "h-[75dvh] w-[75dvh] bg-white shadow-[0_0_45px_20px_rgba(0,0,0,0.05)] transition-all duration-900 ease-[cubic-bezier(0.16,1,0.3,1)]",
           {
-            "h-[max(calc(100dvw-5dvh),1200px)] w-[max(calc(100dvw-5dvh),1200px)]":
-              isCreatingOwnDuck(),
+            [circleExpandedClasses]: isCreatingOwnDuck(),
           },
         )}
-      >
+      />
+      <div class={clsx(circleCommonClasses, circleExpandedClasses)}>
         <div class="relative z-10 w-[75dvh]">
           <WelcomeScreen
             visible={!isCreatingOwnDuck()}
