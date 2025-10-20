@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { createSignal } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { WelcomeScreen } from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
 
@@ -11,7 +11,13 @@ export default function Home() {
     "h-[max(calc(100dvw-5dvh),1200px)] w-[max(calc(100dvw-5dvh),1200px)]";
 
   const createOwnDuck = () => {
-    setIsCreatingOwnDuck(true);
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        setIsCreatingOwnDuck(true);
+      });
+    } else {
+      setIsCreatingOwnDuck(true);
+    }
   };
 
   return (
@@ -28,11 +34,12 @@ export default function Home() {
       />
       <div class={clsx(circleCommonClasses, circleExpandedClasses)}>
         <div class="relative z-10 w-[75dvh]">
-          <WelcomeScreen
-            visible={!isCreatingOwnDuck()}
-            onCreateClick={createOwnDuck}
-          />
-          <AppearanceSelectorScreen visible={isCreatingOwnDuck()} />
+          <Show
+            when={!isCreatingOwnDuck()}
+            fallback={<AppearanceSelectorScreen />}
+          >
+            <WelcomeScreen onCreateClick={createOwnDuck} />
+          </Show>
         </div>
       </div>
     </div>

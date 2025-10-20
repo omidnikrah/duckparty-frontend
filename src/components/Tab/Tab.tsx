@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import type { JSX } from "solid-js";
 import { createMemo, createSignal, For } from "solid-js";
-import styles from "./Tab.module.css";
 
 interface ITabItem {
   id: string;
@@ -34,7 +33,7 @@ export const Tab = (props: ITabProps) => {
 
   return (
     <div class="flex flex-1 select-none flex-col items-center gap-3">
-      <div class="flex flex-row gap-2">
+      <div class="disabled-transition flex flex-row gap-2">
         <For each={props.items}>
           {(item) => (
             <button
@@ -52,7 +51,7 @@ export const Tab = (props: ITabProps) => {
           )}
         </For>
       </div>
-      <div class={styles["tab-content"]}>{currentContent()}</div>
+      <div>{currentContent()}</div>
     </div>
   );
 };

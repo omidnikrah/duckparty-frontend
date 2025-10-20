@@ -14,3 +14,57 @@ html {
 button {
   cursor: pointer;
 }
+
+.spring-transition {
+  view-transition-name: spring-transition;
+}
+
+::view-transition-old(spring-transition),
+::view-transition-new(spring-transition) {
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+::view-transition-old(spring-transition) {
+  animation-name: spring-out;
+}
+
+::view-transition-new(spring-transition) {
+  animation-name: spring-in;
+}
+
+@keyframes spring-out {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+    filter: blur(1px);
+  }
+}
+
+@keyframes spring-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+.disabled-transition {
+  view-transition-name: disabled-transition;
+}
+
+::view-transition-group(disabled-transition),
+::view-transition-old(disabled-transition),
+::view-transition-new(disabled-transition) {
+  animation-duration: 0.3s;
+}
