@@ -13,7 +13,7 @@ export interface TAppearanceState {
 }
 
 export interface TAppearanceStore {
-  state: TAppearanceState;
+  state: () => TAppearanceState;
   selectSkin: (skinId: string) => void;
   toggleAccessory: (accessoryId: string) => void;
   isSkinSelected: (skinId: string) => boolean;

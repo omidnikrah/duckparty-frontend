@@ -1,8 +1,15 @@
 import { Tab } from "@/components";
+import { ChooseNameButton } from "@/components/AppearanceSelectorScreen/ChooseNameButton";
 import { AccessoriesSelectorTab } from "./AccessoriesSelectorTab";
 import { SkinSelectorTab } from "./SkinSelectorTab";
 
-export const AppearanceSelectorScreen = () => {
+interface IAppearanceSelectorScreenProps {
+  onChooseNameClick: () => void;
+}
+
+export const AppearanceSelectorScreen = (
+  props: IAppearanceSelectorScreenProps,
+) => {
   return (
     <div class="spring-transition absolute inset-0 z-10 flex h-fit flex-row items-center justify-center">
       <Tab
@@ -19,6 +26,7 @@ export const AppearanceSelectorScreen = () => {
           },
         ]}
       />
+      <ChooseNameButton onChooseNameClick={props.onChooseNameClick} />
     </div>
   );
 };

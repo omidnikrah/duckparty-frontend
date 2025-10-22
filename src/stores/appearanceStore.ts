@@ -38,7 +38,7 @@ export const useAppearanceStore = (): TAppearanceStore => {
   };
 
   return {
-    state: appearanceState(),
+    state: appearanceState,
     selectSkin,
     toggleAccessory,
     isSkinSelected,

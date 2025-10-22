@@ -15,6 +15,12 @@ button {
   cursor: pointer;
 }
 
+button,
+input {
+  outline: none;
+  appearance: none;
+}
+
 .spring-transition {
   view-transition-name: spring-transition;
 }

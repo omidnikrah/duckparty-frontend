@@ -1,10 +1,11 @@
 import clsx from "clsx";
 import { createSignal, Show } from "solid-js";
-import { WelcomeScreen } from "@/components";
+import { CreateDuckFormSection, WelcomeScreen } from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
 
 export default function Home() {
   const [isCreatingOwnDuck, setIsCreatingOwnDuck] = createSignal(false);
+  const [isChoosingName, setIsChoosingName] = createSignal(false);
   const circleCommonClasses =
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
   const circleExpandedClasses =
@@ -17,6 +18,26 @@ export default function Home() {
       });
     } else {
       setIsCreatingOwnDuck(true);
+    }
+  };
+
+  const handleOnChangeStyleClick = () => {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        setIsChoosingName(false);
+      });
+    } else {
+      setIsChoosingName(false);
+    }
+  };
+
+  const handleOnChooseNameClick = () => {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        setIsChoosingName(true);
+      });
+    } else {
+      setIsChoosingName(true);
     }
   };
 
@@ -35,10 +56,23 @@ export default function Home() {
       <div class={clsx(circleCommonClasses, circleExpandedClasses)}>
         <div class="relative z-10 w-[75dvh]">
           <Show
-            when={!isCreatingOwnDuck()}
-            fallback={<AppearanceSelectorScreen />}
+            when={!isChoosingName()}
+            fallback={
+              <CreateDuckFormSection
+                onChangeStyleClick={handleOnChangeStyleClick}
+              />
+            }
           >
-            <WelcomeScreen onCreateClick={createOwnDuck} />
+            <Show
+              when={!isCreatingOwnDuck()}
+              fallback={
+                <AppearanceSelectorScreen
+                  onChooseNameClick={handleOnChooseNameClick}
+                />
+              }
+            >
+              <WelcomeScreen onCreateClick={createOwnDuck} />
+            </Show>
           </Show>
         </div>
       </div>
