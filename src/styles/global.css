@@ -5,6 +5,10 @@ html {
   height: 100%;
   font-family: "Modak", sans-serif;
   overflow: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 #root {
@@ -73,4 +77,75 @@ input {
 ::view-transition-old(disabled-transition),
 ::view-transition-new(disabled-transition) {
   animation-duration: 0.3s;
+}
+@keyframes duck-waddle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-5deg);
+  }
+  50% {
+    transform: translate3d(20px, 0, 0) rotate(5deg);
+  }
+}
+
+@keyframes duck-swim {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(30px, -5px, 0) rotate(3deg);
+  }
+}
+
+@keyframes duck-bounce {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -30px, 0) rotate(0deg);
+  }
+}
+
+@keyframes duck-wiggle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(-5px, 0, 0) rotate(-8deg);
+  }
+  75% {
+    transform: translate3d(5px, 0, 0) rotate(8deg);
+  }
+}
+
+@keyframes duck-dance {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) rotate(15deg) scale(1.1);
+  }
+}
+
+@keyframes duck-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -15px, 0);
+  }
+}
+
+@keyframes duck-spin {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(360deg);
+  }
 }
