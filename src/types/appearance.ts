@@ -3,8 +3,10 @@ export type AppearanceCategory = "skin" | "accessory";
 export interface TAppearanceItem {
   id: string;
   name: string;
-  image: string;
+  previewImage?: string;
+  originalImage: string;
   category: AppearanceCategory;
+  order?: number;
 }
 
 export interface TAppearanceState {

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { createSignal, Show } from "solid-js";
-import { CreateDuckFormSection, WelcomeScreen } from "@/components";
+import { CreateDuckFormSection, Duck, WelcomeScreen } from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
 
 export default function Home() {
@@ -43,7 +43,7 @@ export default function Home() {
 
   return (
     <div class="relative flex h-full w-full shrink-0 items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[length:60vh] after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-repeat after:opacity-5 after:content-['']">
-      <img src="/body.png" alt="body" class="fixed top-0 z-12 w-[50dvh]" />
+      <Duck />
       <div
         class={clsx(
           circleCommonClasses,
@@ -53,7 +53,7 @@ export default function Home() {
           },
         )}
       />
-      <div class={clsx(circleCommonClasses, circleExpandedClasses)}>
+      <div class={clsx(circleCommonClasses, circleExpandedClasses, "z-100")}>
         <div class="relative z-10 w-[75dvh]">
           <Show
             when={!isChoosingName()}

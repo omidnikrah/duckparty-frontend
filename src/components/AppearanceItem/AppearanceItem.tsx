@@ -21,7 +21,10 @@ export const AppearanceItem = (props: AppearanceItemProps) => {
       aria-pressed={props.selected}
       aria-label={`Select ${props.item.name}`}
     >
-      <img src={props.item.image} alt={props.item.name} />
+      <img
+        src={props.item.previewImage ?? props.item.originalImage}
+        alt={props.item.name}
+      />
     </button>
   );
 };
