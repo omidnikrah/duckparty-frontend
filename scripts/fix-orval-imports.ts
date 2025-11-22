@@ -23,12 +23,24 @@ const REPLACEMENTS = {
 
 const SOLID_MUTATION_IMPORT =
   "import type { SolidMutationOptions } from '@tanstack/solid-query';";
+const AXIOS_ERROR_IMPORT = "import type { AxiosError } from 'axios';";
 const QUERY_KEY_EXTENSION = "& { queryKey: QueryKey }";
 
 const greenLog = (text: string) => `\x1b[32m${text}\x1b[0m`;
 
 function hasSolidMutationImport(content: string): boolean {
   return content.includes(SOLID_MUTATION_IMPORT);
+}
+
+function hasAxiosErrorImport(content: string): boolean {
+  return content.includes(AXIOS_ERROR_IMPORT);
+}
+
+function addAxiosErrorImport(content: string): string {
+  if (hasAxiosErrorImport(content)) {
+    return content;
+  }
+  return `${AXIOS_ERROR_IMPORT}\n${content}`;
 }
 
 function addSolidMutationImport(content: string): string {
@@ -50,6 +62,14 @@ function extendSolidQueryOptions(content: string): string {
   });
 }
 
+function replaceAxiosError(content: string): string {
+  const regex = /TError\s*=\s*([^,]+),/g;
+
+  return content.replace(regex, (_, types) => {
+    return `TError = AxiosError<${types.trim()}>,`;
+  });
+}
+
 function removeUseQueryOptionsAssertions(content: string): string {
   return content.replaceAll(/as\s+UseQueryOptions[\s\S]*?;/g, ";");
 }
@@ -64,9 +84,11 @@ function applyReplacements(content: string): string {
 
 function transformFileContent(content: string): string {
   let transformed = addSolidMutationImport(content);
+  transformed = addAxiosErrorImport(transformed);
   transformed = applyReplacements(transformed);
   transformed = extendSolidQueryOptions(transformed);
   transformed = removeUseQueryOptionsAssertions(transformed);
+  transformed = replaceAxiosError(transformed);
   return transformed;
 }
 
