@@ -35,10 +35,20 @@ const validateEmail = (email: string): string | undefined => {
   return undefined;
 };
 
+const validateVerificationCode = (
+  verificationCode: string,
+): string | undefined => {
+  if (!verificationCode.trim()) {
+    return "Verification code is required";
+  }
+  return undefined;
+};
+
 export const useDuckForm = () => {
   const [formData, setFormData] = createSignal<TDuckFormData>({
     name: "",
     email: "",
+    verificationCode: "",
   });
 
   const [isSubmitting, setIsSubmitting] = createSignal(false);
@@ -52,6 +62,9 @@ export const useDuckForm = () => {
     return {
       name: touched.has("name") ? validateName(data.name) : undefined,
       email: touched.has("email") ? validateEmail(data.email) : undefined,
+      verificationCode: touched.has("verificationCode")
+        ? validateVerificationCode(data.verificationCode)
+        : undefined,
     };
   });
 
@@ -102,6 +115,7 @@ export const useDuckForm = () => {
     setFormData({
       name: "",
       email: "",
+      verificationCode: "",
     });
     setTouchedFields(new Set<keyof TDuckFormData>());
   };
