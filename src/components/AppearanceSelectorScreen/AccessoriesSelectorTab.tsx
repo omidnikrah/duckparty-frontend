@@ -7,7 +7,7 @@ export const AccessoriesSelectorTab = () => {
   const { toggleAccessory, isAccessorySelected } = useAppearanceStore();
 
   return (
-    <div class="flex flex-row items-center justify-center gap-5 py-5">
+    <div class="flex h-[45dvh] flex-row flex-wrap items-center justify-center gap-5 overflow-y-auto py-5 pb-30">
       <For each={ACCESSORIES}>
         {(accessory) => (
           <AppearanceItem
