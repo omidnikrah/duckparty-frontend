@@ -1,3 +1,5 @@
+import { ErrorMessage } from "@/components";
+
 interface FormInputProps {
   id: string;
   name: string;
@@ -57,14 +59,7 @@ export const FormInput = (props: FormInputProps) => {
         aria-describedby={hasError() ? `${props.id}-error` : undefined}
       />
       {hasError() && (
-        <div
-          id={`${props.id}-error`}
-          class="text-center text-red-500 text-sm"
-          role="alert"
-          aria-live="polite"
-        >
-          {props.error}
-        </div>
+        <ErrorMessage id={`${props.id}-error`}>{props.error}</ErrorMessage>
       )}
     </div>
   );
