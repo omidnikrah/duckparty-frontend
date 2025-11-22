@@ -6,16 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:api": "orval && bun scripts/fix-orval-imports.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
+    "@tanstack/solid-query": "^5.90.13",
+    "axios": "^1.13.2",
     "solid-js": "^1.9.9"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
     "@types/node": "^24.6.0",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
+    "orval": "^7.16.1",
     "tailwindcss": "^4.1.14",
     "typescript": "~5.9.3",
     "vite": "npm:rolldown-vite@7.1.14",
