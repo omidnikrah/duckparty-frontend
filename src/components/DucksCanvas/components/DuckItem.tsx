@@ -5,7 +5,7 @@ import type { IDuckItem } from "../DucksCanvas.types";
 interface IDuckItemProps {
   data: IDuckItem;
   index: number;
-  onClick: (id: string) => void;
+  onClick: (data: IDuckItem) => void;
   isAnimating: boolean;
 }
 
@@ -19,7 +19,7 @@ const BASE_DURATION = 1500;
 export const DuckItem = (props: IDuckItemProps): JSX.Element => {
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
-    props.onClick(props.data.id);
+    props.onClick(props.data);
   };
 
   const animationIndex = Math.abs(

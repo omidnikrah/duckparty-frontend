@@ -1,8 +1,10 @@
 import { type JSX, onCleanup, onMount, Show } from "solid-js";
+import { timeAgo } from "@/helpers";
 
 interface IDuckInfoModalProps {
   open: boolean;
   duckName: string;
+  duckImage: string;
   creator: string;
   birthday: string;
   likes: number;
@@ -58,7 +60,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
           <div class="flex items-center gap-5">
             <figure class="flex h-40 w-40 items-center justify-center overflow-hidden rounded-xl bg-gray">
               <img
-                src="/body.png"
+                src={props.duckImage}
                 alt={props.duckName}
                 class="h-[80%] object-cover"
               />
@@ -74,7 +76,9 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
               </div>
               <div class="flex items-center gap-2 text-2xl">
                 <span class="text-purple-700">Birthday:</span>
-                <span class="text-primary">{props.birthday}</span>
+                <span class="text-primary capitalize">
+                  {timeAgo(new Date(props.birthday))}
+                </span>
               </div>
             </div>
           </div>
@@ -91,7 +95,9 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
             </div>
             <div class="relative h-[20px] w-px rotate-30 bg-purple-700/30 after:absolute after:inset-0 after:top-[-px] after:left-[2px] after:h-[20px] after:w-px after:bg-purple-700/30 after:content-['']" />
             <div class="flex flex-row items-end gap-1">
-              <span class="text-4xl text-primary">#{props.rank}</span>
+              <span class="text-4xl text-primary">
+                {props.rank ? `#${props.rank}` : "N/A"}
+              </span>
               <span class="text-lg text-purple-700">On the Duckboard</span>
             </div>
           </div>

@@ -32,12 +32,12 @@ interface DucksCanvasProps {
 export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   let container!: HTMLDivElement;
 
-  const [activeId, setActiveId] = createSignal<string | null>(null);
+  const [selectedDuck, setSelectedDuck] = createSignal<IDuckItem | null>(null);
   const [containerReady, setContainerReady] = createSignal(false);
   const { isAnimating } = useAnimationControl();
 
   const { pan, setPan, isPanning, isMomentumActive, resetPan, eventHandlers } =
-    useCanvasPan(activeId);
+    useCanvasPan(() => selectedDuck()?.id ?? null);
 
   const { scale, handleWheel } = useCanvasZoom(pan, setPan);
 
@@ -64,6 +64,11 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
         h: duckHeight,
         label: duck.name ?? "",
         image: duck.image ?? "",
+        creator: duck.owner?.display_name ?? "Unknown",
+        birthday: duck.created_at ?? "",
+        likes: duck.likes_count ?? 0,
+        dislikes: duck.dislikes_count ?? 0,
+        rank: duck.rank ?? 0,
       };
     });
   });
@@ -73,7 +78,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   );
 
   createEffect(() => {
-    const currentId = activeId();
+    const currentId = selectedDuck()?.id ?? null;
     const shouldOpen = currentId !== null;
 
     if (!shouldOpen) {
@@ -119,9 +124,9 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
       class={clsx(
         "fixed top-0 z-500 h-full w-full touch-none select-none overflow-hidden bg-purple-700",
         {
-          "cursor-grab": !activeId() && !isPanning(),
+          "cursor-grab": !selectedDuck()?.id && !isPanning(),
           "cursor-grabbing": isPanning(),
-          "cursor-default": activeId(),
+          "cursor-default": selectedDuck()?.id,
         },
       )}
     >
@@ -137,7 +142,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
             <DuckItem
               data={item}
               index={index()}
-              onClick={setActiveId}
+              onClick={setSelectedDuck}
               isAnimating={isAnimating()}
             />
           )}
@@ -145,14 +150,15 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
       </div>
 
       <DuckInfoModal
-        open={activeId() !== null}
-        onClose={() => setActiveId(null)}
-        duckName="SuperVespa"
-        creator="GoodWay"
-        birthday="11 October 2015"
-        likes={100}
-        dislikes={10}
-        rank={1}
+        open={!!selectedDuck()}
+        onClose={() => setSelectedDuck(null)}
+        duckName={selectedDuck()?.label ?? ""}
+        duckImage={selectedDuck()?.image ?? ""}
+        creator={selectedDuck()?.creator ?? ""}
+        birthday={selectedDuck()?.birthday ?? ""}
+        likes={selectedDuck()?.likes ?? 0}
+        dislikes={selectedDuck()?.dislikes ?? 0}
+        rank={selectedDuck()?.rank ?? 0}
       />
 
       <div class="fixed bottom-2 left-2 rounded-md bg-black/40 px-1.5 py-1 font-mono text-xs opacity-60">
@@ -162,7 +168,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
           visibleCount={visibleItems().length}
           totalCount={ducks().length}
           isMomentumActive={isMomentumActive()}
-          activeId={activeId()}
+          activeId={selectedDuck()?.id ?? null}
         />
       </div>
     </div>

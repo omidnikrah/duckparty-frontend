@@ -6,6 +6,11 @@ export interface IDuckItem {
   h: number;
   label: string;
   image: string;
+  creator: string;
+  birthday: string;
+  likes: number;
+  dislikes: number;
+  rank: number;
 }
 
 export interface IPanState {
