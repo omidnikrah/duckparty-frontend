@@ -18,7 +18,7 @@ export const FormInput = (props: FormInputProps) => {
   const hasError = () => !!props.error;
 
   const baseClasses =
-    "w-full rounded-full border-5 bg-gray-100 p-5 text-center text-2xl transition-colors placeholder:text-gray-400 focus:outline-none not-placeholder-shown:text-primary";
+    "w-full rounded-full border-5 bg-gray-100 p-5 text-center text-2xl transition-colors placeholder:text-gray-400 focus:outline-none not-placeholder-shown:text-primary autofill:[-webkit-text-fill-color:theme(colors.primary)]";
   const errorClasses =
     "border-red-500 text-red-500 focus:border-red-500 focus:text-red-500 not-placeholder-shown:text-red-500";
   const normalClasses =
