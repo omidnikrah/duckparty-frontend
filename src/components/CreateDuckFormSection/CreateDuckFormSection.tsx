@@ -1,11 +1,9 @@
-import type { AxiosError } from "axios";
 import { createEffect, createMemo, createSignal, Show } from "solid-js";
 import {
   usePostAuth,
   usePostAuthVerify,
   usePostDuck,
 } from "@/api/generated/endpoints";
-import type { PostAuth400 } from "@/api/generated/schemas";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { FormInput } from "@/components/FormInput";
 import { mergeImagesFromPaths, setAuthToken } from "@/helpers";
@@ -119,7 +117,10 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
 
       if (currentStep === AuthStep.EMAIL) {
         await handleEmailAuth();
-      } else if (currentStep === AuthStep.VERIFICATION) {
+      } else if (
+        currentStep === AuthStep.VERIFICATION &&
+        getVerificationCode()
+      ) {
         await handleVerification();
         await handleCreateDuck();
       }
