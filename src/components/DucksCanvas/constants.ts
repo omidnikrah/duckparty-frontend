@@ -11,6 +11,12 @@ export const CANVAS_CONFIG: ICanvasConfig = {
   momentumStopThreshold: 0.1,
   velocityScale: 16,
   dragThreshold: 5,
+  defaultItemSize: {
+    width: 250,
+    height: 250,
+  },
+  defaultItemGap: 30,
+  defaultItemsPerRow: 25,
   duckAnimationTypes: [
     "float",
     "dance",

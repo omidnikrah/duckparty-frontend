@@ -35,5 +35,11 @@ export interface ICanvasConfig {
   momentumStopThreshold: number;
   velocityScale: number;
   dragThreshold: number;
+  defaultItemSize: {
+    width: number;
+    height: number;
+  };
+  defaultItemGap: number;
+  defaultItemsPerRow: number;
   duckAnimationTypes: string[];
 }

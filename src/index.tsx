@@ -1,4 +1,5 @@
 /* @refresh reload */
+
 import { QueryClientProvider } from "@tanstack/solid-query";
 import { render } from "solid-js/web";
 import App from "./App.tsx";

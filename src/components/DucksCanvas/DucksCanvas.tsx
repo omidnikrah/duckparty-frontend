@@ -8,6 +8,7 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
+import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import {
   DebugOverlay,
   DuckInfoModal,
@@ -18,8 +19,17 @@ import {
   useCanvasVirtualization,
   useCanvasZoom,
 } from ".";
+import { CANVAS_CONFIG } from "./constants";
 
-export const DucksCanvas = (): JSX.Element => {
+interface DucksCanvasProps {
+  ducks?: DuckResponse[];
+  duckWidth?: number;
+  duckHeight?: number;
+  duckGap?: number;
+  ducksPerRow?: number;
+}
+
+export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   let container!: HTMLDivElement;
 
   const [activeId, setActiveId] = createSignal<string | null>(null);
@@ -31,17 +41,34 @@ export const DucksCanvas = (): JSX.Element => {
 
   const { scale, handleWheel } = useCanvasZoom(pan, setPan);
 
-  const ducks: IDuckItem[] = Array.from({ length: 500 }, (_, i) => ({
-    id: `n${i}`,
-    x: (i % 25) * 280, // 250px width + 30px gap
-    y: Math.floor(i / 25) * 280, // 250px height + 30px gap
-    w: 250,
-    h: 250,
-    label: `Duck ${i + 1}`,
-    image: "/body.png",
-  }));
+  const duckWidth = props.duckWidth ?? CANVAS_CONFIG.defaultItemSize.width;
+  const duckHeight = props.duckHeight ?? CANVAS_CONFIG.defaultItemSize.height;
+  const duckGap = props.duckGap ?? CANVAS_CONFIG.defaultItemGap;
+  const ducksPerRow = props.ducksPerRow ?? CANVAS_CONFIG.defaultItemsPerRow;
 
-  const { visibleItems } = useCanvasVirtualization(ducks, pan, scale, () =>
+  const ducks = createMemo<IDuckItem[]>(() => {
+    const data = props.ducks;
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    return data.map((duck, index) => {
+      const x = (index % ducksPerRow) * (duckWidth + duckGap);
+      const y = Math.floor(index / ducksPerRow) * (duckHeight + duckGap);
+
+      return {
+        id: duck.id?.toString() ?? `duck-${index}`,
+        x,
+        y,
+        w: duckWidth,
+        h: duckHeight,
+        label: duck.name ?? "",
+        image: duck.image ?? "",
+      };
+    });
+  });
+
+  const { visibleItems } = useCanvasVirtualization(ducks(), pan, scale, () =>
     containerReady() ? container : undefined,
   );
 
@@ -133,7 +160,7 @@ export const DucksCanvas = (): JSX.Element => {
           pan={pan()}
           scale={scale()}
           visibleCount={visibleItems().length}
-          totalCount={ducks.length}
+          totalCount={ducks().length}
           isMomentumActive={isMomentumActive()}
           activeId={activeId()}
         />

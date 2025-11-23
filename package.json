@@ -10,6 +10,7 @@
     "generate:api": "orval && bun scripts/fix-orval-imports.ts"
   },
   "dependencies": {
+    "@solidjs/router": "^0.15.4",
     "@tailwindcss/vite": "^4.1.14",
     "@tanstack/solid-query": "^5.90.13",
     "axios": "^1.13.2",
