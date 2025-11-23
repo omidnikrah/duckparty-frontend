@@ -1,8 +1,16 @@
+import { useQueryClient } from "@tanstack/solid-query";
 import { type JSX, onCleanup, onMount, Show } from "solid-js";
+import {
+  getGetDucksQueryKey,
+  usePutDuckDuckIdReactionReaction,
+} from "@/api/generated/endpoints";
+import type { DuckReactionResponse } from "@/api/generated/schemas/duckReactionResponse";
+import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import { timeAgo } from "@/helpers";
 
 interface IDuckInfoModalProps {
   open: boolean;
+  id: string;
   duckName: string;
   duckImage: string;
   creator: string;
@@ -14,6 +22,54 @@ interface IDuckInfoModalProps {
 }
 
 export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
+  const queryClient = useQueryClient();
+  const reactionMutation = usePutDuckDuckIdReactionReaction();
+
+  const updateDucksCache = (data: DuckReactionResponse) => {
+    const queryKey = getGetDucksQueryKey();
+    queryClient.setQueryData<DuckResponse[]>(queryKey, (oldData) => {
+      if (!oldData || !data.duck) return oldData;
+
+      return oldData.map((duck) =>
+        duck.id?.toString() === props.id
+          ? {
+              ...duck,
+              likes_count: data.duck?.likes_count ?? duck.likes_count,
+              dislikes_count: data.duck?.dislikes_count ?? duck.dislikes_count,
+            }
+          : duck,
+      );
+    });
+  };
+
+  const handleLike = () => {
+    reactionMutation.mutate(
+      {
+        duckId: props.id,
+        reaction: "like",
+      },
+      {
+        onSuccess: (data) => {
+          updateDucksCache(data);
+        },
+      },
+    );
+  };
+
+  const handleDislike = () => {
+    reactionMutation.mutate(
+      {
+        duckId: props.id,
+        reaction: "dislike",
+      },
+      {
+        onSuccess: (data) => {
+          updateDucksCache(data);
+        },
+      },
+    );
+  };
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       props.onClose();
@@ -72,7 +128,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
               </div>
               <div class="flex items-center gap-2 text-2xl">
                 <span class="text-purple-700">Creator:</span>
-                <span class="text-primary">{props.creator}</span>
+                <span class="text-primary">{props.creator || "N/A"}</span>
               </div>
               <div class="flex items-center gap-2 text-2xl">
                 <span class="text-purple-700">Birthday:</span>
@@ -84,14 +140,32 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
           </div>
 
           <div class="flex items-center justify-between gap-5">
-            <div class="flex flex-row items-end gap-1">
-              <span class="text-4xl text-primary">{props.likes}</span>
-              <span class="text-lg text-purple-700">Duck</span>
+            <div class="group flex flex-row items-center justify-center">
+              <div class="flex flex-row items-end gap-1 transition-opacity group-hover:opacity-50">
+                <span class="text-4xl text-primary">{props.likes}</span>
+                <span class="text-lg text-purple-700">Duck</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleLike}
+                class="absolute scale-0 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100"
+              >
+                <img src="/thumbs-up.png" alt="Like" class="w-[45px]" />
+              </button>
             </div>
             <div class="relative h-[20px] w-px rotate-30 bg-purple-700/30 after:absolute after:inset-0 after:top-[-px] after:left-[2px] after:h-[20px] after:w-px after:bg-purple-700/30 after:content-['']" />
-            <div class="flex flex-row items-end gap-1">
-              <span class="text-4xl text-primary">{props.dislikes}</span>
-              <span class="text-lg text-purple-700">Yuck</span>
+            <div class="group flex flex-row items-center justify-center">
+              <div class="flex flex-row items-end gap-1 transition-opacity group-hover:opacity-50">
+                <span class="text-4xl text-primary">{props.dislikes}</span>
+                <span class="text-lg text-purple-700">Yuck</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleDislike}
+                class="absolute rotate-180 scale-0 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100"
+              >
+                <img src="/thumbs-up.png" alt="Dislike" class="w-[45px]" />
+              </button>
             </div>
             <div class="relative h-[20px] w-px rotate-30 bg-purple-700/30 after:absolute after:inset-0 after:top-[-px] after:left-[2px] after:h-[20px] after:w-px after:bg-purple-700/30 after:content-['']" />
             <div class="flex flex-row items-end gap-1">

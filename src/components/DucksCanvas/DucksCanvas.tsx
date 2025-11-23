@@ -7,6 +7,7 @@ import {
   type JSX,
   onCleanup,
   onMount,
+  Show,
 } from "solid-js";
 import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import {
@@ -27,17 +28,18 @@ interface DucksCanvasProps {
   duckHeight?: number;
   duckGap?: number;
   ducksPerRow?: number;
+  debug?: boolean;
 }
 
 export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   let container!: HTMLDivElement;
 
-  const [selectedDuck, setSelectedDuck] = createSignal<IDuckItem | null>(null);
+  const [selectedDuckId, setSelectedDuckId] = createSignal<string | null>(null);
   const [containerReady, setContainerReady] = createSignal(false);
   const { isAnimating } = useAnimationControl();
 
   const { pan, setPan, isPanning, isMomentumActive, resetPan, eventHandlers } =
-    useCanvasPan(() => selectedDuck()?.id ?? null);
+    useCanvasPan(() => selectedDuckId());
 
   const { scale, handleWheel } = useCanvasZoom(pan, setPan);
 
@@ -73,12 +75,19 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     });
   });
 
+  const selectedDuck = createMemo<IDuckItem | null>(() => {
+    const id = selectedDuckId();
+    if (!id) return null;
+
+    return ducks().find((duck) => duck.id === id) ?? null;
+  });
+
   const { visibleItems } = useCanvasVirtualization(ducks(), pan, scale, () =>
     containerReady() ? container : undefined,
   );
 
   createEffect(() => {
-    const currentId = selectedDuck()?.id ?? null;
+    const currentId = selectedDuckId();
     const shouldOpen = currentId !== null;
 
     if (!shouldOpen) {
@@ -122,11 +131,11 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
       onPointerCancel={eventHandlers.onPointerUp}
       onWheel={(e) => handleWheel(e, container)}
       class={clsx(
-        "fixed top-0 z-500 h-full w-full touch-none select-none overflow-hidden bg-purple-700",
+        "fixed top-0 z-500 h-full w-full touch-none select-none overflow-hidden bg-[url('/yard-pattern.jpg')] bg-center bg-repeat",
         {
-          "cursor-grab": !selectedDuck()?.id && !isPanning(),
+          "cursor-grab": !selectedDuckId() && !isPanning(),
           "cursor-grabbing": isPanning(),
-          "cursor-default": selectedDuck()?.id,
+          "cursor-default": !!selectedDuckId(),
         },
       )}
     >
@@ -142,7 +151,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
             <DuckItem
               data={item}
               index={index()}
-              onClick={setSelectedDuck}
+              onClick={(duck) => setSelectedDuckId(duck.id)}
               isAnimating={isAnimating()}
             />
           )}
@@ -151,7 +160,8 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
 
       <DuckInfoModal
         open={!!selectedDuck()}
-        onClose={() => setSelectedDuck(null)}
+        onClose={() => setSelectedDuckId(null)}
+        id={selectedDuck()?.id ?? ""}
         duckName={selectedDuck()?.label ?? ""}
         duckImage={selectedDuck()?.image ?? ""}
         creator={selectedDuck()?.creator ?? ""}
@@ -161,16 +171,18 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
         rank={selectedDuck()?.rank ?? 0}
       />
 
-      <div class="fixed bottom-2 left-2 rounded-md bg-black/40 px-1.5 py-1 font-mono text-xs opacity-60">
-        <DebugOverlay
-          pan={pan()}
-          scale={scale()}
-          visibleCount={visibleItems().length}
-          totalCount={ducks().length}
-          isMomentumActive={isMomentumActive()}
-          activeId={selectedDuck()?.id ?? null}
-        />
-      </div>
+      <Show when={props.debug}>
+        <div class="fixed bottom-2 left-2 rounded-md bg-black/40 px-1.5 py-1 font-mono text-xs opacity-60">
+          <DebugOverlay
+            pan={pan()}
+            scale={scale()}
+            visibleCount={visibleItems().length}
+            totalCount={ducks().length}
+            isMomentumActive={isMomentumActive()}
+            activeId={selectedDuckId()}
+          />
+        </div>
+      </Show>
     </div>
   );
 };
