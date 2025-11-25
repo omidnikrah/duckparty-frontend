@@ -78,6 +78,7 @@ input {
 ::view-transition-new(disabled-transition) {
   animation-duration: 0.3s;
 }
+
 @keyframes duck-waddle {
   0%,
   100% {
@@ -172,10 +173,18 @@ input {
   border-radius: calc(infinity * 1px);
 }
 
-.top-layer {
-  view-transition-name: top-layer;
+.duck-preview {
+  view-transition-name: duck-preview;
 }
 
-::view-transition-group(top-layer) {
+::view-transition-group(duck-preview) {
+  z-index: 100;
+}
+
+.choose-name-btn {
+  view-transition-name: choose-name-btn;
+}
+
+::view-transition-group(choose-name-btn) {
   z-index: 100;
 }

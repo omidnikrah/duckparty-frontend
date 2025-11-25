@@ -10,7 +10,7 @@ export const Duck = () => {
   );
 
   return (
-    <div class="pointer-events-none fixed top-[-10dvh] top-layer z-12 w-[80dvh]">
+    <div class="duck-preview pointer-events-none fixed top-[-10dvh] z-12 w-[80dvh]">
       <img
         src={
           selectedSkin()
