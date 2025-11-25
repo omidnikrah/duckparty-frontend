@@ -59,14 +59,13 @@ export default function Home() {
       <div
         class={clsx(
           circleCommonClasses,
-          "h-[75dvh] w-[75dvh] bg-white shadow-[0_0_45px_20px_rgba(0,0,0,0.05)] transition-all duration-900 ease-[cubic-bezier(0.16,1,0.3,1)]",
           {
             [circleExpandedClasses]: isCreatingOwnDuck() && !isLoadingParty(),
             [circleLoadPartyClasses]: isLoadingParty(),
           },
+          "circle-container h-[75dvh] w-[75dvh] bg-white",
         )}
-      />
-      <div class={clsx(circleCommonClasses, circleExpandedClasses, "z-100")}>
+      >
         <div class="relative z-10 w-[75dvh]">
           <Show
             when={!isChoosingName()}

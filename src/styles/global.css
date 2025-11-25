@@ -149,3 +149,33 @@ input {
     transform: translate3d(0, 0, 0) rotate(360deg);
   }
 }
+
+.transparent-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
+}
+
+.transparent-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.circle-container {
+  view-transition-name: circle-container;
+  view-transition-group: contain;
+}
+
+::view-transition-group(circle-container) {
+  overflow: clip;
+  border-radius: calc(infinity * 1px);
+}
+
+.top-layer {
+  view-transition-name: top-layer;
+}
+
+::view-transition-group(top-layer) {
+  z-index: 100;
+}

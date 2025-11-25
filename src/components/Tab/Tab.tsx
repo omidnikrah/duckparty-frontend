@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { JSX } from "solid-js";
-import { createMemo, createSignal, For } from "solid-js";
+import { createMemo, createSignal, For, onMount } from "solid-js";
 
 interface ITabItem {
   id: string;
@@ -14,6 +14,13 @@ interface ITabProps {
 
 export const Tab = (props: ITabProps) => {
   const [activeTab, setActiveTab] = createSignal(props.items[0].id);
+  const [isMounted, setIsMounted] = createSignal(false);
+
+  onMount(() => {
+    setTimeout(() => {
+      setIsMounted(true);
+    }, 10);
+  });
 
   const handleTabClick = (tabId: string) => {
     if (tabId !== activeTab()) {
@@ -33,7 +40,11 @@ export const Tab = (props: ITabProps) => {
 
   return (
     <div class="flex flex-1 select-none flex-col items-center gap-3">
-      <div class="disabled-transition flex flex-row gap-2">
+      <div
+        class={clsx("flex flex-row gap-2", {
+          "disabled-transition": isMounted(),
+        })}
+      >
         <For each={props.items}>
           {(item) => (
             <button

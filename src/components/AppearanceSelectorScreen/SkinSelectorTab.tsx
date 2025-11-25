@@ -7,7 +7,7 @@ export const SkinSelectorTab = () => {
   const { selectSkin, isSkinSelected } = useAppearanceStore();
 
   return (
-    <div class="flex h-[45dvh] flex-row flex-wrap items-center justify-center gap-5 overflow-y-auto py-5 pb-30">
+    <div class="transparent-scrollbar flex h-[45dvh] flex-row flex-wrap items-center justify-center gap-5 overflow-y-auto py-5 pb-30">
       <For each={SKINS}>
         {(skin) => (
           <AppearanceItem
