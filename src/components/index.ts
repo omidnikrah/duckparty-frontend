@@ -4,5 +4,6 @@ export * from "./Duck";
 export * from "./DucksCanvas";
 export * from "./ErrorMessage";
 export * from "./FormInput";
+export * from "./GradientScrollArea";
 export * from "./Tab";
 export * from "./WelcomeScreen";
