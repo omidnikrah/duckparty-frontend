@@ -122,6 +122,14 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     return `translate(${Number.isFinite(x) ? x : 0}px, ${Number.isFinite(y) ? y : 0}px) scale(${Number.isFinite(s) ? s : 1})`;
   });
 
+  const backgroundStyle = createMemo(() => {
+    const s = scale() / 3;
+    const scaledSize = s * 100;
+    return {
+      "background-size": `${scaledSize}%`,
+    };
+  });
+
   return (
     <div
       ref={container}
@@ -138,6 +146,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
           "cursor-default": !!selectedDuckId(),
         },
       )}
+      style={backgroundStyle()}
     >
       <div
         class="backface-hidden pointer-events-none absolute isolate origin-top-left will-change-transform contain-style"
