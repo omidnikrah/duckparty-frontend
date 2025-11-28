@@ -1,5 +1,3 @@
-import { Show } from "solid-js";
-
 interface IWelcomeScreenProps {
   onCreateClick: () => void;
 }
