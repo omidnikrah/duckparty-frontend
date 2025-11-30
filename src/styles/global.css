@@ -188,3 +188,44 @@ input {
 ::view-transition-group(choose-name-btn) {
   z-index: 100;
 }
+
+/* Set name dialog view transition */
+.set-name-dialog {
+  view-transition-name: set-name-dialog;
+}
+
+::view-transition-old(set-name-dialog),
+::view-transition-new(set-name-dialog) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+::view-transition-old(set-name-dialog) {
+  animation-name: slide-out-to-top;
+}
+
+::view-transition-new(set-name-dialog) {
+  animation-name: slide-in-from-top;
+}
+
+@keyframes slide-in-from-top {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out-to-top {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
