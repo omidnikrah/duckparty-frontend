@@ -6,11 +6,6 @@
  * OpenAPI spec version: 1.0
  */
 
-export type PostDuckBody = {
-  /** Duck image file */
-  image: Blob;
-  /** Duck name */
+export interface UpdateNameRequest {
   name: string;
-  /** Duck appearance JSON */
-  appearance: string;
-};
+}
