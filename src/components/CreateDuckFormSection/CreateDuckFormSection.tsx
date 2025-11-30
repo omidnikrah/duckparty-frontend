@@ -92,7 +92,6 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
     await duckMutation.mutateAsync({
       data: {
         name: getDuckName(),
-        email: getEmail(),
         appearance: JSON.stringify(appearance),
         image: duckImage,
       },
