@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Show } from "solid-js";
+import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { useGetDucks, useGetUser } from "@/api/generated/endpoints";
 import { DucksCanvas, SetNameDialog } from "@/components";
 
@@ -13,9 +13,11 @@ export default function Party() {
 
     if (shouldShow !== showDialog()) {
       if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          setShowDialog(shouldShow);
-        });
+        setTimeout(() => {
+          document.startViewTransition(() => {
+            setShowDialog(shouldShow);
+          });
+        }, 1000);
       } else {
         setShowDialog(shouldShow);
       }

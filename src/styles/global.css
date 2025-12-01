@@ -189,7 +189,6 @@ input {
   z-index: 100;
 }
 
-/* Set name dialog view transition */
 .set-name-dialog {
   view-transition-name: set-name-dialog;
 }
@@ -227,5 +226,19 @@ input {
   100% {
     opacity: 0;
     transform: translateY(-100%);
+  }
+}
+
+::view-transition-old(root) {
+  opacity: 1;
+}
+::view-transition-new(root) {
+  opacity: 0;
+  animation: fadeIn 500ms forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
   }
 }

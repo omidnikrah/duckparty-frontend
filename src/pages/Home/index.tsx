@@ -13,7 +13,8 @@ export default function Home() {
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
   const circleExpandedClasses =
     "h-[max(calc(100dvw-5dvh),1200px)] w-[max(calc(100dvw-5dvh),1200px)]";
-  const circleLoadPartyClasses = "h-[200dvh] w-[200dvh]";
+  const circleLoadPartyClasses =
+    "h-[300dvh] w-[300dvh] transition-width transition-height duration-700 [&>*]:opacity-0 [&>*]:transition-opacity [&>*]:duration-300 duration-700 bg-[url('/yard-pattern.jpg')] bg-top-left bg-repeat bg-size-[30%] bg-fixed";
 
   const createOwnDuck = () => {
     if (document.startViewTransition) {
@@ -48,14 +49,21 @@ export default function Home() {
   const handleOnDuckCreated = () => {
     setIsLoadingParty(true);
 
-    setTimeout(() => {
+    if (document.startViewTransition) {
+      document.body.style.backgroundColor = "var(--color-yard-green)";
+      document.startViewTransition(() => {
+        setTimeout(() => {
+          navigate("/party", { replace: true });
+        }, 200);
+      });
+    } else {
       navigate("/party", { replace: true });
-    }, 1000);
+    }
   };
 
   return (
     <div class="relative flex h-full w-full shrink-0 items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[length:60vh] after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-repeat after:opacity-5 after:content-['']">
-      <Duck />
+      <Duck isVisible={!isLoadingParty()} />
       <div
         class={clsx(
           circleCommonClasses,
@@ -67,6 +75,13 @@ export default function Home() {
         )}
       >
         <div class="relative z-10 w-[75dvh]">
+          <button
+            type="button"
+            class="absolute top-0 right-0 z-1000000"
+            onClick={handleOnDuckCreated}
+          >
+            click
+          </button>
           <Show
             when={!isChoosingName()}
             fallback={

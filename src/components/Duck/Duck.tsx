@@ -1,8 +1,13 @@
+import clsx from "clsx";
 import { createMemo, For } from "solid-js";
 import { getAppearanceItemById } from "@/data";
 import { useAppearanceStore } from "@/stores/appearanceStore";
 
-export const Duck = () => {
+interface IDuckProps {
+  isVisible?: boolean;
+}
+
+export const Duck = (props: IDuckProps) => {
   const store = useAppearanceStore();
   const selectedSkin = createMemo(() => store.state().selectedSkin);
   const selectedAccessories = createMemo(
@@ -10,7 +15,14 @@ export const Duck = () => {
   );
 
   return (
-    <div class="duck-preview pointer-events-none fixed top-[-10dvh] z-12 w-[80dvh]">
+    <div
+      class={clsx(
+        "duck-preview pointer-events-none fixed top-[-10dvh] z-12 w-[80dvh] transition-opacity duration-300",
+        {
+          "opacity-0": !props.isVisible,
+        },
+      )}
+    >
       <img
         src={
           selectedSkin()
