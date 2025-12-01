@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onMount, Show } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import { useGetDucks, useGetUser } from "@/api/generated/endpoints";
 import { DucksCanvas, SetNameDialog } from "@/components";
 

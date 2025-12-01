@@ -75,13 +75,6 @@ export default function Home() {
         )}
       >
         <div class="relative z-10 w-[75dvh]">
-          <button
-            type="button"
-            class="absolute top-0 right-0 z-1000000"
-            onClick={handleOnDuckCreated}
-          >
-            click
-          </button>
           <Show
             when={!isChoosingName()}
             fallback={
