@@ -1,4 +1,5 @@
 export * from "./AppearanceItem";
+export * from "./Button";
 export * from "./CreateDuckFormSection";
 export * from "./Duck";
 export * from "./DucksCanvas";

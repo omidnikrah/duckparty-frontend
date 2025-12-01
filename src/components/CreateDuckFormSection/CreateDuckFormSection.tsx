@@ -4,8 +4,7 @@ import {
   usePostAuthVerify,
   usePostDuck,
 } from "@/api/generated/endpoints";
-import { ErrorMessage } from "@/components/ErrorMessage";
-import { FormInput } from "@/components/FormInput";
+import { Button, ErrorMessage, FormInput } from "@/components";
 import { mergeImagesFromPaths, setAuthToken } from "@/helpers";
 import { useAppearanceStore } from "@/stores/appearanceStore";
 import type { TAppearanceState } from "@/types/appearance";
@@ -31,17 +30,14 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
 
   const appearanceStore = useAppearanceStore();
   const [authStep, setAuthStep] = createSignal<AuthStep>(AuthStep.EMAIL);
+  const [isCreatingDuck, setIsCreatingDuck] = createSignal(false);
 
   const authMutation = usePostAuth();
   const verificationMutation = usePostAuthVerify();
   const duckMutation = usePostDuck();
 
   const isLoading = createMemo(() => {
-    return (
-      authMutation.isPending ||
-      verificationMutation.isPending ||
-      duckMutation.isPending
-    );
+    return authMutation.isPending || isCreatingDuck();
   });
 
   const getButtonText = () => {
@@ -97,6 +93,8 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
       },
     });
 
+    setIsCreatingDuck(false);
+
     props.onDuckCreated?.({
       name: getDuckName(),
       email: getEmail(),
@@ -120,6 +118,7 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
         currentStep === AuthStep.VERIFICATION &&
         getVerificationCode()
       ) {
+        setIsCreatingDuck(true);
         await handleVerification();
         await handleCreateDuck();
       }
@@ -202,14 +201,14 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
           Change Style
         </button>
 
-        <button
-          class="w-full rounded-full bg-primary p-5 text-white text-xl transition-transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50"
+        <Button
           type="submit"
           disabled={!formState().isValid || isLoading()}
+          isLoading={isLoading()}
           onClick={handleSubmit}
         >
-          {isLoading() ? "Creating..." : getButtonText()}
-        </button>
+          {getButtonText()}
+        </Button>
       </div>
     </div>
   );
