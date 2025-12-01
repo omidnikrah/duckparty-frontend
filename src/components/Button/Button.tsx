@@ -1,4 +1,6 @@
+import clsx from "clsx";
 import { type JSX, Show } from "solid-js";
+import { twMerge } from "tailwind-merge";
 
 interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
@@ -8,7 +10,12 @@ interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = (props: ButtonProps) => {
   return (
     <button
-      class={`relative flex w-full items-center justify-center rounded-full bg-primary p-5 text-white text-xl transition-transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50 ${props.class || ""}`}
+      class={twMerge(
+        clsx(
+          "relative flex w-full items-center justify-center rounded-full bg-primary p-5 text-white text-xl transition-transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50",
+          props.class,
+        ),
+      )}
       type={props.type || "button"}
       disabled={props.disabled}
       onClick={props.onClick}

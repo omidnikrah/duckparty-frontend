@@ -3,7 +3,7 @@ import {
   usePutUserChangeName,
 } from "@/api/generated/endpoints";
 import { queryClient } from "@/api/query-client";
-import { FormInput } from "@/components";
+import { Button, FormInput } from "@/components";
 import { useSetNameForm } from "./useSetNameForm.hook";
 
 export const SetNameDialog = () => {
@@ -62,13 +62,14 @@ export const SetNameDialog = () => {
           onInput={(value) => updateName(value)}
           onBlur={() => markAsTouched()}
         />
-        <button
+        <Button
           type="submit"
-          class="shrink-0 rounded-full bg-primary px-8 py-[15px] text-white"
+          class="w-auto shrink-0 p-[19px_20px] text-base leading-none"
           disabled={!isValid() && error() !== undefined}
+          isLoading={updateNameMutation.isPending}
         >
           quack quack
-        </button>
+        </Button>
       </form>
     </div>
   );
