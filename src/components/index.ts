@@ -1,6 +1,7 @@
 export * from "./AppearanceItem";
 export * from "./Button";
 export * from "./CreateDuckFormSection";
+export * from "./Dropdown";
 export * from "./Duck";
 export * from "./DucksCanvas";
 export * from "./ErrorMessage";
