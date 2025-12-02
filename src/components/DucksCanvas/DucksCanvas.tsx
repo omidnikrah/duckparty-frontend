@@ -102,17 +102,17 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   });
 
   onMount(() => {
-    const { signal, abort } = new AbortController();
+    const abortController = new AbortController();
 
     window.addEventListener("pointerup", eventHandlers.onPointerUp, {
-      signal,
+      signal: abortController.signal,
     });
     window.addEventListener("pointercancel", eventHandlers.onPointerUp, {
-      signal,
+      signal: abortController.signal,
     });
 
     onCleanup(() => {
-      abort();
+      abortController.abort();
     });
   });
 

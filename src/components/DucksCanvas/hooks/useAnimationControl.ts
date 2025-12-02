@@ -16,21 +16,21 @@ export const useAnimationControl = () => {
       setIsAnimating(false);
     };
 
-    const { signal, abort } = new AbortController();
+    const abortController = new AbortController();
 
     document.addEventListener("visibilitychange", handleVisibilityChange, {
-      signal,
+      signal: abortController.signal,
     });
 
     window.addEventListener("focus", handleWindowFocus, {
-      signal,
+      signal: abortController.signal,
     });
     window.addEventListener("blur", handleWindowBlur, {
-      signal,
+      signal: abortController.signal,
     });
 
     onCleanup(() => {
-      abort();
+      abortController.abort();
     });
   });
 
