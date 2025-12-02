@@ -7,6 +7,7 @@ export * from "./DucksCanvas";
 export * from "./ErrorMessage";
 export * from "./FormInput";
 export * from "./GradientScrollArea";
+export * from "./MobileOverlay";
 export * from "./SetNameDialog";
 export * from "./Tab";
 export * from "./WelcomeScreen";
