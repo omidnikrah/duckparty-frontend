@@ -1,6 +1,6 @@
 import { useNavigate } from "@solidjs/router";
 import clsx from "clsx";
-import { createSignal, Show } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import { CreateDuckFormSection, Duck, WelcomeScreen } from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
 
@@ -15,6 +15,10 @@ export default function Home() {
     "h-[max(calc(100dvw-5dvh),1200px)] w-[max(calc(100dvw-5dvh),1200px)]";
   const circleLoadPartyClasses =
     "h-[300dvh] w-[300dvh] transition-width transition-height duration-700 [&>*]:opacity-0 [&>*]:transition-opacity [&>*]:duration-300 duration-700 bg-[url('/yard-pattern.jpg')] bg-top-left bg-repeat bg-size-[30%] bg-fixed";
+
+  onMount(() => {
+    document.body.style.backgroundColor = "var(--color-primary)";
+  });
 
   const createOwnDuck = () => {
     if (document.startViewTransition) {
@@ -62,7 +66,7 @@ export default function Home() {
   };
 
   return (
-    <div class="relative flex h-full w-full shrink-0 items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[length:60vh] after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-repeat after:opacity-5 after:content-['']">
+    <div class="relative flex h-full w-full shrink-0 scale-fade-in-enter items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[length:60vh] after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-repeat after:opacity-5 after:content-['']">
       <Duck isVisible={!isLoadingParty()} />
       <div
         class={clsx(
