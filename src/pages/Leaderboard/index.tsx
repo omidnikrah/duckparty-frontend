@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { For, onMount } from "solid-js";
 import { useGetLeaderboard } from "@/api/generated/endpoints";
-import { DuckCard, GradientScrollArea, LeaderboardItem } from "@/components";
+import { GradientScrollArea, LeaderboardItem } from "@/components";
 
 export default function Leaderboard() {
   const leaderboard = useGetLeaderboard();
