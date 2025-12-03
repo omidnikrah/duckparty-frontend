@@ -2,12 +2,14 @@ import { useNavigate } from "@solidjs/router";
 import { createEffect, createSignal, Show } from "solid-js";
 import { useGetDucks, useGetUser } from "@/api/generated/endpoints";
 import { Dropdown, DucksCanvas, SetNameDialog } from "@/components";
+import { getUserData } from "@/helpers";
 
 export default function Party() {
   const getDucks = useGetDucks();
   const userInfo = useGetUser();
   const [showDialog, setShowDialog] = createSignal(false);
   const navigate = useNavigate();
+  const authenticatedUser = getUserData();
 
   createEffect(() => {
     const shouldShow =
@@ -36,10 +38,15 @@ export default function Party() {
         <Dropdown
           items={[
             { label: "Create new duck", onClick: () => navigate("/") },
-            {
-              label: "My ducks",
-              onClick: () => navigate("/my-ducks"),
-            },
+            ...(authenticatedUser?.ID
+              ? [
+                  {
+                    label: "My ducks",
+                    onClick: () =>
+                      navigate(`/creator/${authenticatedUser.ID}/ducks`),
+                  },
+                ]
+              : []),
             {
               label: "Duckboard",
               onClick: () => navigate("/duckboard"),

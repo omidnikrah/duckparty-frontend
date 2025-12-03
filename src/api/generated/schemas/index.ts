@@ -16,6 +16,8 @@ export * from "./duckResponse";
 export * from "./duckUserResponse";
 export * from "./getDucks500";
 export * from "./getUser400";
+export * from "./getUserUserIdDucks400";
+export * from "./getUserUserIdDucks500";
 export * from "./postAuth200";
 export * from "./postAuth400";
 export * from "./postAuthVerify400";

@@ -3,6 +3,8 @@ export * from "./Button";
 export * from "./CreateDuckFormSection";
 export * from "./Dropdown";
 export * from "./Duck";
+export * from "./DuckCard";
+export * from "./DuckInfoModal";
 export * from "./DucksCanvas";
 export * from "./ErrorMessage";
 export * from "./FormInput";

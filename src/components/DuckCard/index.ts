@@ -1,0 +1,1 @@
+export { DuckCard } from "./DuckCard";

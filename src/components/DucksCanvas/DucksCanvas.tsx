@@ -10,9 +10,10 @@ import {
   Show,
 } from "solid-js";
 import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
+import { getUserData } from "@/helpers";
+import { DuckInfoModal } from "..";
 import {
   DebugOverlay,
-  DuckInfoModal,
   DuckItem,
   type IDuckItem,
   useAnimationControl,
@@ -37,7 +38,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   const [selectedDuckId, setSelectedDuckId] = createSignal<string | null>(null);
   const [containerReady, setContainerReady] = createSignal(false);
   const { isAnimating } = useAnimationControl();
-
+  const authenticatedUser = getUserData();
   const { pan, setPan, isPanning, isMomentumActive, resetPan, eventHandlers } =
     useCanvasPan(() => selectedDuckId());
 
@@ -60,6 +61,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
 
       return {
         id: duck.id?.toString() ?? `duck-${index}`,
+        owner_id: duck.owner_id?.toString() ?? "",
         x,
         y,
         w: duckWidth,
@@ -79,7 +81,15 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     const id = selectedDuckId();
     if (!id) return null;
 
-    return ducks().find((duck) => duck.id === id) ?? null;
+    const duck = ducks().find((duck) => duck.id === id);
+    console.log(duck);
+    return duck ?? null;
+  });
+
+  const isMe = createMemo(() => {
+    return (
+      authenticatedUser?.ID?.toString() === selectedDuck()?.owner_id?.toString()
+    );
   });
 
   const { visibleItems } = useCanvasVirtualization(ducks(), pan, scale, () =>
@@ -170,14 +180,19 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
       <DuckInfoModal
         open={!!selectedDuck()}
         onClose={() => setSelectedDuckId(null)}
-        id={selectedDuck()?.id ?? ""}
-        duckName={selectedDuck()?.label ?? ""}
-        duckImage={selectedDuck()?.image ?? ""}
-        creator={selectedDuck()?.creator ?? ""}
-        birthday={selectedDuck()?.birthday ?? ""}
-        likes={selectedDuck()?.likes ?? 0}
-        dislikes={selectedDuck()?.dislikes ?? 0}
-        rank={selectedDuck()?.rank ?? 0}
+        data={{
+          id: +selectedDuck()?.id!,
+          name: selectedDuck()?.label ?? "",
+          image: selectedDuck()?.image ?? "",
+          owner: {
+            display_name: selectedDuck()?.creator ?? "",
+          },
+          created_at: selectedDuck()?.birthday ?? "",
+          likes_count: selectedDuck()?.likes ?? 0,
+          dislikes_count: selectedDuck()?.dislikes ?? 0,
+          rank: selectedDuck()?.rank ?? 0,
+        }}
+        isMe={isMe()}
       />
 
       <Show when={props.debug}>

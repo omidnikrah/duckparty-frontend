@@ -1,0 +1,1 @@
+export { DuckInfoModal } from "./DuckInfoModal";

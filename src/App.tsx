@@ -1,5 +1,6 @@
 import { Route, Router } from "@solidjs/router";
 import { MobileOverlay } from "./components";
+import CreatorDucks from "./pages/CreatorDucks";
 import Home from "./pages/Home";
 import Party from "./pages/Party";
 
@@ -10,6 +11,7 @@ function App() {
       <Router>
         <Route path="/" component={Home} />
         <Route path="/party" component={Party} />
+        <Route path="/creator/:creatorId/ducks" component={CreatorDucks} />
       </Router>
     </>
   );

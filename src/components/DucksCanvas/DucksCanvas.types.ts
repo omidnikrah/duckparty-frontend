@@ -1,5 +1,6 @@
 export interface IDuckItem {
   id: string;
+  owner_id: string;
   x: number;
   y: number;
   w: number;

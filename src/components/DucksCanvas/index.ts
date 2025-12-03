@@ -1,5 +1,4 @@
 export { DebugOverlay } from "./components/DebugOverlay";
-export { DuckInfoModal } from "./components/DuckInfoModal";
 export { DuckItem } from "./components/DuckItem";
 export { CANVAS_CONFIG } from "./constants";
 export { DucksCanvas } from "./DucksCanvas";

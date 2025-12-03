@@ -6,10 +6,4 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface UserResponse {
-  CreatedAt?: string;
-  ID?: number;
-  UpdatedAt?: string;
-  display_name?: string;
-  email?: string;
-}
+export type GetUserUserIdDucks500 = { [key: string]: string };

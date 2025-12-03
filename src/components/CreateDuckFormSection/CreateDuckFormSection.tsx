@@ -5,7 +5,7 @@ import {
   usePostDuck,
 } from "@/api/generated/endpoints";
 import { Button, ErrorMessage, FormInput } from "@/components";
-import { mergeImagesFromPaths, setAuthToken } from "@/helpers";
+import { mergeImagesFromPaths, setAuthToken, setUserData } from "@/helpers";
 import { useAppearanceStore } from "@/stores/appearanceStore";
 import type { TAppearanceState } from "@/types/appearance";
 import { useDuckForm } from "./useDuckForm.hook";
@@ -51,6 +51,7 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
     const token = verificationMutation.data?.token;
     if (token) {
       setAuthToken(token);
+      setUserData(verificationMutation.data?.user ?? {});
     }
   });
 
