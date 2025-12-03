@@ -49,7 +49,7 @@ export default function Party() {
               : []),
             {
               label: "Duckboard",
-              onClick: () => navigate("/duckboard"),
+              onClick: () => navigate("/leaderboard"),
             },
             {
               label: "Give a star",

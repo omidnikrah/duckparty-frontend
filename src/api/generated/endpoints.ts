@@ -25,6 +25,7 @@ import type {
   DuckReactionResponse,
   DuckResponse,
   GetDucks500,
+  GetLeaderboard500,
   GetUser400,
   GetUserUserIdDucks400,
   GetUserUserIdDucks500,
@@ -468,6 +469,77 @@ export function useGetDucks<
   request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetDucksQueryOptions(options);
+
+  const query = useQuery(() => queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Returns the top 100 ducks sorted by rank (highest to lowest)
+ * @summary Get ducks leaderboard
+ */
+export const getLeaderboard = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<DuckResponse[]>(
+    { url: `/leaderboard`, method: "GET", signal },
+    options,
+  );
+};
+
+export const getGetLeaderboardQueryKey = () => {
+  return [`/leaderboard`] as const;
+};
+
+export const getGetLeaderboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLeaderboard>>,
+  TError = AxiosError<GetLeaderboard500>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetLeaderboardQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLeaderboard>>> = ({
+    signal,
+  }) => getLeaderboard(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } ;
+};
+
+export type GetLeaderboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLeaderboard>>
+>;
+export type GetLeaderboardQueryError = GetLeaderboard500;
+
+/**
+ * @summary Get ducks leaderboard
+ */
+
+export function useGetLeaderboard<
+  TData = Awaited<ReturnType<typeof getLeaderboard>>,
+  TError = AxiosError<GetLeaderboard500>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+  request?: SecondParameter<typeof customInstance>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLeaderboardQueryOptions(options);
 
   const query = useQuery(() => queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

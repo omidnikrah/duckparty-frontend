@@ -15,6 +15,7 @@ export * from "./duckReactionResponseReaction";
 export * from "./duckResponse";
 export * from "./duckUserResponse";
 export * from "./getDucks500";
+export * from "./getLeaderboard500";
 export * from "./getUser400";
 export * from "./getUserUserIdDucks400";
 export * from "./getUserUserIdDucks500";
