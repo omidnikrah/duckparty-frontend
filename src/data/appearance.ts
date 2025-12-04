@@ -1,4 +1,5 @@
 import type { AppearanceCategory, TAppearanceItem } from "@/types/appearance";
+import { AccessoryGroup } from "@/types/appearance";
 
 const createAppearanceItem = (
   id: string,
@@ -7,6 +8,7 @@ const createAppearanceItem = (
   originalImage: string,
   previewImage?: string,
   order?: number,
+  group?: AccessoryGroup,
 ): TAppearanceItem => ({
   id,
   name,
@@ -14,6 +16,7 @@ const createAppearanceItem = (
   originalImage,
   previewImage,
   order,
+  group,
 });
 
 export const SKINS: TAppearanceItem[] = [
@@ -111,6 +114,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/flower-crown.png",
     "/accessories/preview/flower-crown.png",
     5,
+    AccessoryGroup.Other,
   ),
   createAppearanceItem(
     "king-crown",
@@ -119,6 +123,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/king-crown.png",
     "/accessories/preview/king-crown.png",
     4,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "superman-cape",
@@ -126,7 +131,8 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "accessory",
     "/accessories/original/superman-cape.png",
     "/accessories/preview/superman-cape.png",
-    5,
+    3,
+    AccessoryGroup.Cape,
   ),
   createAppearanceItem(
     "vespa-helmet",
@@ -135,6 +141,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/vespa-helmet.png",
     "/accessories/preview/vespa-helmet.png",
     5,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "artiste-hat",
@@ -143,6 +150,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/artiste-hat.png",
     "/accessories/preview/artiste-hat.png",
     5,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "astronaut-helmet",
@@ -151,6 +159,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/astronaut-helmet.png",
     "/accessories/preview/astronaut-helmet.png",
     5,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "barbie-earmuffs",
@@ -159,6 +168,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/barbie-earmuffs.png",
     "/accessories/preview/barbie-earmuffs.png",
     5,
+    AccessoryGroup.Other,
   ),
   createAppearanceItem(
     "batman-cape",
@@ -166,7 +176,8 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "accessory",
     "/accessories/original/batman-cape.png",
     "/accessories/preview/batman-cape.png",
-    5,
+    3,
+    AccessoryGroup.Cape,
   ),
   createAppearanceItem(
     "blue-winter-hat",
@@ -175,6 +186,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/blue-winter-hat.png",
     "/accessories/preview/blue-winter-hat.png",
     5,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "blue-winter-scarf",
@@ -183,6 +195,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/blue-winter-scarf.png",
     "/accessories/preview/blue-winter-scarf.png",
     5,
+    AccessoryGroup.Other,
   ),
   createAppearanceItem(
     "chef-hat",
@@ -191,6 +204,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/chef-hat.png",
     "/accessories/preview/chef-hat.png",
     5,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "doctor-stethoscope",
@@ -199,6 +213,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/doctor-stethoscope.png",
     "/accessories/preview/doctor-stethoscope.png",
     5,
+    AccessoryGroup.Other,
   ),
   createAppearanceItem(
     "pirate-eye-patch",
@@ -207,6 +222,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/pirate-eye-patch.png",
     "/accessories/preview/pirate-eye-patch.png",
     5,
+    AccessoryGroup.Eyewear,
   ),
   createAppearanceItem(
     "pirate-hat",
@@ -215,6 +231,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/pirate-hat.png",
     "/accessories/preview/pirate-hat.png",
     5,
+    AccessoryGroup.Hat,
   ),
   createAppearanceItem(
     "sunglass",
@@ -223,6 +240,7 @@ export const ACCESSORIES: TAppearanceItem[] = [
     "/accessories/original/sunglass.png",
     "/accessories/preview/sunglass.png",
     5,
+    AccessoryGroup.Eyewear,
   ),
 ] as const;
 
@@ -241,4 +259,17 @@ export const getAppearanceItemsByCategory = (
   category: AppearanceCategory,
 ): TAppearanceItem[] => {
   return category === "skin" ? SKINS : ACCESSORIES;
+};
+
+export const getAccessoryGroup = (
+  accessoryId: string,
+): AccessoryGroup | undefined => getAppearanceItemById(accessoryId)?.group;
+
+export const getAccessoriesInSameGroup = (accessoryId: string): string[] => {
+  const group = getAccessoryGroup(accessoryId);
+  if (!group) return [];
+
+  return ACCESSORIES.filter((item) => item.group === group).map(
+    (item) => item.id,
+  );
 };

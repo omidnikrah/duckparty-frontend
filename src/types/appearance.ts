@@ -1,5 +1,12 @@
 export type AppearanceCategory = "skin" | "accessory";
 
+export enum AccessoryGroup {
+  Hat = "hat",
+  Eyewear = "eyewear",
+  Cape = "cape",
+  Other = "other",
+}
+
 export interface TAppearanceItem {
   id: string;
   name: string;
@@ -7,6 +14,7 @@ export interface TAppearanceItem {
   originalImage: string;
   category: AppearanceCategory;
   order?: number;
+  group?: AccessoryGroup;
 }
 
 export interface TAppearanceState {
