@@ -25,3 +25,7 @@ export const getUserData = (): UserResponse | null => {
 export const removeUserData = () => {
   localStorage.removeItem(USER_DATA_KEY);
 };
+
+export const isUserLoggedIn = () => {
+  return !!(getUserData() || getAuthToken());
+};

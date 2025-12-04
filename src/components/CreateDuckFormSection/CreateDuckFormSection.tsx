@@ -5,7 +5,13 @@ import {
   usePostDuck,
 } from "@/api/generated/endpoints";
 import { Button, ErrorMessage, FormInput } from "@/components";
-import { mergeImagesFromPaths, setAuthToken, setUserData } from "@/helpers";
+import {
+  getUserData,
+  isUserLoggedIn,
+  mergeImagesFromPaths,
+  setAuthToken,
+  setUserData,
+} from "@/helpers";
 import { useAppearanceStore } from "@/stores/appearanceStore";
 import type { TAppearanceState } from "@/types/appearance";
 import { useDuckForm } from "./useDuckForm.hook";
@@ -25,11 +31,14 @@ enum AuthStep {
 }
 
 export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
+  const isLoggedIn = isUserLoggedIn();
   const { formState, updateField, getFieldError, markFieldAsTouched } =
-    useDuckForm();
+    useDuckForm(isLoggedIn);
 
   const appearanceStore = useAppearanceStore();
-  const [authStep, setAuthStep] = createSignal<AuthStep>(AuthStep.EMAIL);
+  const [authStep, setAuthStep] = createSignal<AuthStep>(
+    isLoggedIn ? AuthStep.VERIFICATION : AuthStep.EMAIL,
+  );
   const [isCreatingDuck, setIsCreatingDuck] = createSignal(false);
 
   const authMutation = usePostAuth();
@@ -37,7 +46,7 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
   const duckMutation = usePostDuck();
 
   const isLoading = createMemo(() => {
-    return authMutation.isPending || isCreatingDuck();
+    return (!isLoggedIn && authMutation.isPending) || isCreatingDuck();
   });
 
   const getButtonText = () => {
@@ -96,9 +105,10 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
 
     setIsCreatingDuck(false);
 
+    const userData = getUserData();
     props.onDuckCreated?.({
       name: getDuckName(),
-      email: getEmail(),
+      email: isLoggedIn ? (userData?.email ?? "") : getEmail(),
       appearance,
     });
   };
@@ -113,7 +123,10 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
     try {
       const currentStep = authStep();
 
-      if (currentStep === AuthStep.EMAIL) {
+      if (isLoggedIn) {
+        setIsCreatingDuck(true);
+        await handleCreateDuck();
+      } else if (currentStep === AuthStep.EMAIL) {
         await handleEmailAuth();
       } else if (
         currentStep === AuthStep.VERIFICATION &&
@@ -148,7 +161,7 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
           onBlur={() => markFieldAsTouched("name")}
         />
 
-        <Show when={!authMutation.data}>
+        <Show when={!isLoggedIn && !authMutation.data}>
           <FormInput
             id="email"
             name="email"
@@ -162,7 +175,9 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
           />
         </Show>
 
-        <Show when={!!authMutation.data && !authMutation.isPending}>
+        <Show
+          when={!isLoggedIn && !!authMutation.data && !authMutation.isPending}
+        >
           <FormInput
             id="verification-code"
             name="verificationCode"

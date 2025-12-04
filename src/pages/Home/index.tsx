@@ -9,6 +9,7 @@ export default function Home() {
   const [isChoosingName, setIsChoosingName] = createSignal(false);
   const [isLoadingParty, setIsLoadingParty] = createSignal(false);
   const navigate = useNavigate();
+
   const circleCommonClasses =
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
   const circleExpandedClasses =

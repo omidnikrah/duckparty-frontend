@@ -44,7 +44,7 @@ const validateVerificationCode = (
   return undefined;
 };
 
-export const useDuckForm = () => {
+export const useDuckForm = (isLoggedIn: boolean = false) => {
   const [formData, setFormData] = createSignal<TDuckFormData>({
     name: "",
     email: "",
@@ -61,15 +61,22 @@ export const useDuckForm = () => {
     const touched = touchedFields();
     return {
       name: touched.has("name") ? validateName(data.name) : undefined,
-      email: touched.has("email") ? validateEmail(data.email) : undefined,
-      verificationCode: touched.has("verificationCode")
-        ? validateVerificationCode(data.verificationCode)
-        : undefined,
+      email:
+        !isLoggedIn && touched.has("email")
+          ? validateEmail(data.email)
+          : undefined,
+      verificationCode:
+        !isLoggedIn && touched.has("verificationCode")
+          ? validateVerificationCode(data.verificationCode)
+          : undefined,
     };
   });
 
   const isValid = createMemo(() => {
     const data = formData();
+    if (isLoggedIn) {
+      return !validateName(data.name);
+    }
     return !validateName(data.name) && !validateEmail(data.email);
   });
 
