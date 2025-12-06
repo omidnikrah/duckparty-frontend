@@ -54,6 +54,10 @@ bun run dev
 bun run build
 ```
 
+## 🚢 Deployment
+
+This project is deployed using [Coolify](https://coolify.io/).
+
 ## 📝 Scripts
 
 - `dev` - Start development server
