@@ -1,6 +1,7 @@
 export * from "./AppearanceItem";
 export * from "./Button";
 export * from "./CreateDuckFormSection";
+export * from "./DeleteDuckConfirmationModal";
 export * from "./Dropdown";
 export * from "./Duck";
 export * from "./DuckCard";
@@ -11,8 +12,8 @@ export * from "./FormInput";
 export * from "./GradientScrollArea";
 export * from "./LeaderboardItem";
 export * from "./LoginForm";
-export * from "./Modal";
 export * from "./MobileOverlay";
+export * from "./Modal";
 export * from "./SetNameDialog";
 export * from "./ShareDuckModal";
 export * from "./Tab";

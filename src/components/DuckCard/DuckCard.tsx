@@ -49,6 +49,7 @@ export const DuckCard = (props: DuckCardProps) => {
           id: +props.data.id!,
           name: props.data.name ?? "",
           image: props.data.image ?? "",
+          owner_id: props.data.owner_id,
           owner: {
             display_name: props.data.owner?.display_name ?? "",
           },

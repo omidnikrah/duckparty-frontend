@@ -82,7 +82,6 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     if (!id) return null;
 
     const duck = ducks().find((duck) => duck.id === id);
-    console.log(duck);
     return duck ?? null;
   });
 
@@ -92,7 +91,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     );
   });
 
-  const { visibleItems } = useCanvasVirtualization(ducks(), pan, scale, () =>
+  const { visibleItems } = useCanvasVirtualization(ducks, pan, scale, () =>
     containerReady() ? container : undefined,
   );
 
@@ -184,6 +183,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
           id: +selectedDuck()?.id!,
           name: selectedDuck()?.label ?? "",
           image: selectedDuck()?.image ?? "",
+          owner_id: Number(selectedDuck()?.owner_id),
           owner: {
             display_name: selectedDuck()?.creator ?? "",
           },

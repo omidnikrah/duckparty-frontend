@@ -22,6 +22,10 @@ import { customInstance } from "../axios-instance";
 import type {
   AuthenticateRequest,
   AuthenticateResponse,
+  DeleteDuckDuckId200,
+  DeleteDuckDuckId400,
+  DeleteDuckDuckId404,
+  DeleteDuckDuckId500,
   DuckReactionResponse,
   DuckResponse,
   GetDucks500,
@@ -317,6 +321,92 @@ export const usePostDuck = <
   TContext
 > => {
   const mutationOptions = getPostDuckMutationOptions(options);
+
+  return useMutation(() => mutationOptions);
+};
+
+/**
+ * Deletes a duck owned by the authenticated user
+ * @summary Remove a duck
+ */
+export const deleteDuckDuckId = (
+  duckId: number,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<DeleteDuckDuckId200>(
+    { url: `/duck/${duckId}`, method: "DELETE" },
+    options,
+  );
+};
+
+export const getDeleteDuckDuckIdMutationOptions = <
+  TError = AxiosError<DeleteDuckDuckId400 | DeleteDuckDuckId404 | DeleteDuckDuckId500>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteDuckDuckId>>,
+    TError,
+    { duckId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): SolidMutationOptions<
+  Awaited<ReturnType<typeof deleteDuckDuckId>>,
+  TError,
+  { duckId: number },
+  TContext
+> => {
+  const mutationKey = ["deleteDuckDuckId"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteDuckDuckId>>,
+    { duckId: number }
+  > = (props) => {
+    const { duckId } = props ?? {};
+
+    return deleteDuckDuckId(duckId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteDuckDuckIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteDuckDuckId>>
+>;
+
+export type DeleteDuckDuckIdMutationError =
+  | DeleteDuckDuckId400
+  | DeleteDuckDuckId404
+  | DeleteDuckDuckId500;
+
+/**
+ * @summary Remove a duck
+ */
+export const useDeleteDuckDuckId = <
+  TError = AxiosError<DeleteDuckDuckId400 | DeleteDuckDuckId404 | DeleteDuckDuckId500>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteDuckDuckId>>,
+    TError,
+    { duckId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteDuckDuckId>>,
+  TError,
+  { duckId: number },
+  TContext
+> => {
+  const mutationOptions = getDeleteDuckDuckIdMutationOptions(options);
 
   return useMutation(() => mutationOptions);
 };

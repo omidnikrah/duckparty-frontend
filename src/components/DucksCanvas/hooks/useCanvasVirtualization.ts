@@ -1,22 +1,23 @@
-import { createMemo } from "solid-js";
+import { type Accessor, createMemo } from "solid-js";
 import { CANVAS_CONFIG } from "../constants";
 import type { IDuckItem, IPanState } from "../DucksCanvas.types";
 
 export function useCanvasVirtualization(
-  items: IDuckItem[],
+  items: Accessor<IDuckItem[]>,
   pan: () => IPanState,
   scale: () => number,
   container: () => HTMLElement | undefined,
 ) {
   const visibleItems = createMemo(() => {
+    const currentItems = items(); // Call the accessor to get current items
     const containerElement = container();
     if (!containerElement) {
-      return items;
+      return currentItems;
     }
 
     const rect = containerElement.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
-      return items;
+      return currentItems;
     }
     const currentScale = scale();
     const currentPan = pan();
@@ -32,8 +33,8 @@ export function useCanvasVirtualization(
 
     const visibleItems: IDuckItem[] = [];
 
-    for (let i = 0; i < items.length; i += CANVAS_CONFIG.chunkSize) {
-      const chunk = items.slice(i, i + CANVAS_CONFIG.chunkSize);
+    for (let i = 0; i < currentItems.length; i += CANVAS_CONFIG.chunkSize) {
+      const chunk = currentItems.slice(i, i + CANVAS_CONFIG.chunkSize);
       const visibleChunk = chunk.filter((item) => {
         const itemRight = item.x + item.w;
         const itemBottom = item.y + item.h;
