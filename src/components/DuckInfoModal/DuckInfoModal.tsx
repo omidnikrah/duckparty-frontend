@@ -1,12 +1,6 @@
 import { useQueryClient } from "@tanstack/solid-query";
 import clsx from "clsx";
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  type JSX,
-  Show,
-} from "solid-js";
+import { createMemo, createSignal, type JSX, Show } from "solid-js";
 import {
   getGetDucksQueryKey,
   usePutDuckDuckIdReactionReaction,

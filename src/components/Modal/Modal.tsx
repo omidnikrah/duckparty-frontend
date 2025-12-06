@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { createEffect, type JSX, onCleanup, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Button } from "@/components/Button";
 
 interface IModalProps {
   open: boolean;
