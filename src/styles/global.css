@@ -11,6 +11,16 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  box-shadow: 0 0 0px 1000px var(--color-gray-100) inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 #root {
   height: 100%;
 }

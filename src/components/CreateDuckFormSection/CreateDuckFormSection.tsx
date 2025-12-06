@@ -32,14 +32,14 @@ enum AuthStep {
 
 export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
   const isLoggedIn = isUserLoggedIn();
-  const { formState, updateField, getFieldError, markFieldAsTouched } =
-    useDuckForm(isLoggedIn);
 
   const appearanceStore = useAppearanceStore();
   const [authStep, setAuthStep] = createSignal<AuthStep>(
     isLoggedIn ? AuthStep.VERIFICATION : AuthStep.EMAIL,
   );
   const [isCreatingDuck, setIsCreatingDuck] = createSignal(false);
+  const { formState, updateField, getFieldError, markFieldAsTouched } =
+    useDuckForm(isLoggedIn, authStep() === AuthStep.VERIFICATION);
 
   const authMutation = usePostAuth();
   const verificationMutation = usePostAuthVerify();

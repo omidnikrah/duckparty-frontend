@@ -1,14 +1,23 @@
 import { useNavigate } from "@solidjs/router";
 import clsx from "clsx";
 import { createSignal, onMount, Show } from "solid-js";
-import { CreateDuckFormSection, Duck, WelcomeScreen } from "@/components";
+import {
+  CreateDuckFormSection,
+  Duck,
+  LoginForm,
+  WelcomeScreen,
+} from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
+import { getUserData, isUserLoggedIn } from "@/helpers/auth.helper";
 
 export default function Home() {
   const [isCreatingOwnDuck, setIsCreatingOwnDuck] = createSignal(false);
+  const [isDirectLogin, setIsDirectLogin] = createSignal(false);
   const [isChoosingName, setIsChoosingName] = createSignal(false);
   const [isLoadingParty, setIsLoadingParty] = createSignal(false);
   const navigate = useNavigate();
+  const isLoggedIn = isUserLoggedIn();
+  const authenticatedUser = getUserData();
 
   const circleCommonClasses =
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
@@ -66,6 +75,27 @@ export default function Home() {
     }
   };
 
+  const handleOnManageClick = () => {
+    if (isLoggedIn) {
+      navigate(`/creator/${authenticatedUser?.ID}/ducks`, { replace: true });
+      return;
+    }
+
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        setIsDirectLogin(true);
+      });
+    } else {
+      setIsDirectLogin(true);
+    }
+  };
+
+  const handleOnLoginSuccess = (userData: { ID?: string | number }) => {
+    if (userData?.ID) {
+      navigate(`/creator/${userData.ID}/ducks`, { replace: true });
+    }
+  };
+
   return (
     <div class="relative flex h-full w-full shrink-0 scale-fade-in-enter items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[length:60vh] after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-repeat after:opacity-5 after:content-['']">
       <Duck isVisible={!isLoadingParty()} />
@@ -73,10 +103,11 @@ export default function Home() {
         class={clsx(
           circleCommonClasses,
           {
-            [circleExpandedClasses]: isCreatingOwnDuck() && !isLoadingParty(),
+            [circleExpandedClasses]:
+              (isCreatingOwnDuck() || isDirectLogin()) && !isLoadingParty(),
             [circleLoadPartyClasses]: isLoadingParty(),
           },
-          "circle-container h-[75dvh] w-[75dvh] bg-white",
+          "circle-container group h-[75dvh] w-[75dvh] bg-white",
         )}
       >
         <div class="relative z-10 w-[75dvh]">
@@ -89,15 +120,23 @@ export default function Home() {
               />
             }
           >
-            <Show
-              when={!isCreatingOwnDuck()}
-              fallback={
-                <AppearanceSelectorScreen
-                  onChooseNameClick={handleOnChooseNameClick}
+            <Show when={!isDirectLogin()}>
+              <Show
+                when={!isCreatingOwnDuck()}
+                fallback={
+                  <AppearanceSelectorScreen
+                    onChooseNameClick={handleOnChooseNameClick}
+                  />
+                }
+              >
+                <WelcomeScreen
+                  onCreateClick={createOwnDuck}
+                  onManageClick={handleOnManageClick}
                 />
-              }
-            >
-              <WelcomeScreen onCreateClick={createOwnDuck} />
+              </Show>
+            </Show>
+            <Show when={isDirectLogin()}>
+              <LoginForm onLoginSuccess={handleOnLoginSuccess} />
             </Show>
           </Show>
         </div>

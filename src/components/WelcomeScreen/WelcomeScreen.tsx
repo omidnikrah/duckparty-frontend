@@ -1,5 +1,6 @@
 interface IWelcomeScreenProps {
   onCreateClick: () => void;
+  onManageClick: () => void;
 }
 
 export const WelcomeScreen = (props: IWelcomeScreenProps) => {
@@ -12,6 +13,16 @@ export const WelcomeScreen = (props: IWelcomeScreenProps) => {
         type="button"
       >
         Create your own
+      </button>
+      <span class="cubic-transition h-0 translate-y-2 text-primary opacity-0 transition-all delay-75 group-hover:opacity-20">
+        or
+      </span>
+      <button
+        type="button"
+        class="cubic-transition mt-10 translate-y-10 rounded-full border-5 border-primary px-3 py-1 text-primary opacity-0 transition-all hover:scale-105 hover:opacity-100 group-hover:translate-y-0 group-hover:opacity-40"
+        onClick={props.onManageClick}
+      >
+        Manage ur ducks
       </button>
     </div>
   );

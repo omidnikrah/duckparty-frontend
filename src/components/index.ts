@@ -10,6 +10,7 @@ export * from "./ErrorMessage";
 export * from "./FormInput";
 export * from "./GradientScrollArea";
 export * from "./LeaderboardItem";
+export * from "./LoginForm";
 export * from "./Modal";
 export * from "./MobileOverlay";
 export * from "./SetNameDialog";
