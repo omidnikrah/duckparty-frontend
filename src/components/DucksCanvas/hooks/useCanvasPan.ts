@@ -151,7 +151,12 @@ export function useCanvasPan(activeId?: () => string | null) {
       }
 
       startPan(event.clientX, event.clientY);
-      (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+      if (event.currentTarget) {
+        const element = event.currentTarget as HTMLElement;
+        if (element && typeof element.setPointerCapture === "function") {
+          element.setPointerCapture(event.pointerId);
+        }
+      }
       lastPan = { x: event.clientX, y: event.clientY };
     } catch (error) {
       console.error("Error in onPointerDown:", error);
@@ -177,10 +182,14 @@ export function useCanvasPan(activeId?: () => string | null) {
 
   const onPointerUp = (event?: PointerEvent) => {
     try {
-      if (event)
-        (event.currentTarget as HTMLElement).releasePointerCapture(
-          event.pointerId,
-        );
+      const element = event?.currentTarget as HTMLElement | undefined;
+      if (
+        event &&
+        element &&
+        typeof element.releasePointerCapture === "function"
+      ) {
+        element.releasePointerCapture(event.pointerId);
+      }
     } catch (error) {
       console.error("Error releasing pointer capture:", error);
     }
