@@ -8,7 +8,7 @@ import {
 import type { DuckReactionResponse } from "@/api/generated/schemas/duckReactionResponse";
 import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import { DeleteDuckConfirmationModal, Modal } from "@/components";
-import { getUserData, timeAgo } from "@/helpers";
+import { getUserData, isUserLoggedIn, timeAgo } from "@/helpers";
 
 interface IDuckInfoModalProps {
   open: boolean;
@@ -32,6 +32,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
   const queryClient = useQueryClient();
   const reactionMutation = usePutDuckDuckIdReactionReaction();
   const [showDeleteModal, setShowDeleteModal] = createSignal(false);
+  const isLoggedIn = isUserLoggedIn();
   const authenticatedUser = getUserData();
   const isMe = createMemo(() => authenticatedUser?.ID === props.data.owner_id);
 
@@ -135,7 +136,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
         <div class="flex items-center justify-between gap-5">
           <div
             class={clsx("group flex flex-row items-center justify-center", {
-              "pointer-events-none": props.isMe,
+              "pointer-events-none": props.isMe || !isLoggedIn,
             })}
           >
             <div class="flex flex-row items-end gap-1 transition-opacity group-hover:opacity-50">
@@ -146,7 +147,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
             </div>
             <button
               type="button"
-              disabled={props.isMe}
+              disabled={props.isMe || !isLoggedIn}
               onClick={handleLike}
               class="absolute scale-0 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100"
             >
@@ -156,7 +157,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
           <div class="relative h-[20px] w-px rotate-30 bg-purple-700/30 after:absolute after:inset-0 after:top-[-px] after:left-[2px] after:h-[20px] after:w-px after:bg-purple-700/30 after:content-['']" />
           <div
             class={clsx("group flex flex-row items-center justify-center", {
-              "pointer-events-none": props.isMe,
+              "pointer-events-none": props.isMe || !isLoggedIn,
             })}
           >
             <div class="flex flex-row items-end gap-1 transition-opacity group-hover:opacity-50">
@@ -167,7 +168,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
             </div>
             <button
               type="button"
-              disabled={props.isMe}
+              disabled={props.isMe || !isLoggedIn}
               onClick={handleDislike}
               class="absolute rotate-180 scale-0 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100"
             >
