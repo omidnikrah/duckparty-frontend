@@ -17,11 +17,9 @@ export default function Party() {
 
     if (shouldShow !== showDialog()) {
       if (document.startViewTransition) {
-        setTimeout(() => {
-          document.startViewTransition(() => {
-            setShowDialog(shouldShow);
-          });
-        }, 1000);
+        document.startViewTransition(() => {
+          setShowDialog(shouldShow);
+        });
       } else {
         setShowDialog(shouldShow);
       }

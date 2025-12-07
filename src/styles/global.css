@@ -214,6 +214,7 @@ input {
 }
 
 ::view-transition-new(set-name-dialog) {
+  animation-delay: 1s;
   animation-name: slide-in-from-top;
 }
 

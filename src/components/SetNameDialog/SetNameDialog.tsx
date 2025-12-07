@@ -23,17 +23,9 @@ export const SetNameDialog = () => {
         },
         {
           onSuccess: () => {
-            if (document.startViewTransition) {
-              document.startViewTransition(() => {
-                queryClient.invalidateQueries({
-                  queryKey: getGetUserQueryKey(),
-                });
-              });
-            } else {
-              queryClient.invalidateQueries({
-                queryKey: getGetUserQueryKey(),
-              });
-            }
+            queryClient.invalidateQueries({
+              queryKey: getGetUserQueryKey(),
+            });
           },
         },
       );
