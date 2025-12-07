@@ -24,6 +24,7 @@ export const AppearanceItem = (props: AppearanceItemProps) => {
       <img
         src={props.item.previewImage ?? props.item.originalImage}
         alt={props.item.name}
+        loading="lazy"
       />
     </button>
   );
