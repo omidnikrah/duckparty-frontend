@@ -119,7 +119,7 @@ export const Dropdown = (props: DropdownProps) => {
         onClick={toggleDropdown}
         class={twMerge(
           clsx(
-            "flex h-14 w-14 items-center justify-center rounded-full bg-white text-gray-800 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl",
+            "flex h-14 w-14 items-center justify-center rounded-full bg-white text-purple-700 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl",
             {
               "scale-110 bg-primary text-white shadow-xl ring-2 ring-white":
                 isOpen(),
@@ -165,7 +165,7 @@ export const Dropdown = (props: DropdownProps) => {
               }}
               onMouseEnter={() => handleItemMouseEnter(index())}
               onMouseLeave={handleItemMouseLeave}
-              class="relative z-10 w-full rounded-2xl px-4 py-3 text-left text-base text-gray-800 transition-colors duration-300 ease-out hover:text-white focus:text-white focus:outline-none"
+              class="relative z-10 w-full rounded-2xl px-4 py-3 text-left text-base text-purple-700 transition-colors duration-300 ease-out hover:text-white focus:text-white focus:outline-none"
               role="menuitem"
             >
               {item.label}
