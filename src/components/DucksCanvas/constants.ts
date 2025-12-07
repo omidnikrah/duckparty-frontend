@@ -27,3 +27,11 @@ export const CANVAS_CONFIG: ICanvasConfig = {
     "waddle",
   ],
 } as const;
+
+export const RANDOMIZATION_CONFIG = {
+  randomScale: 230,
+  offsetRange: 0.3,
+  seedXMultiplier: 7919,
+  seedYMultiplier: 3571,
+  seedYOffset: 1237,
+} as const;

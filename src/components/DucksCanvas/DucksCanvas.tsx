@@ -21,7 +21,7 @@ import {
   useCanvasVirtualization,
   useCanvasZoom,
 } from ".";
-import { CANVAS_CONFIG } from "./constants";
+import { CANVAS_CONFIG, RANDOMIZATION_CONFIG } from "./constants";
 
 interface DucksCanvasProps {
   ducks?: DuckResponse[];
@@ -49,6 +49,36 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   const duckGap = props.duckGap ?? CANVAS_CONFIG.defaultItemGap;
   const ducksPerRow = props.ducksPerRow ?? CANVAS_CONFIG.defaultItemsPerRow;
 
+  const randomNumber = (seed: number) => {
+    return Math.sin(seed) * Math.random() * RANDOMIZATION_CONFIG.randomScale;
+  };
+
+  const generateRandomPosition = (
+    index: number,
+    duckId: number | string | undefined,
+  ): { x: number; y: number } => {
+    const baseX = (index % ducksPerRow) * (duckWidth + duckGap);
+    const baseY = Math.floor(index / ducksPerRow) * (duckHeight + duckGap);
+
+    const id = duckId ?? index;
+    const maxOffset = (duckWidth + duckGap) * RANDOMIZATION_CONFIG.offsetRange;
+    const maxOffsetScale = maxOffset / RANDOMIZATION_CONFIG.randomScale;
+
+    const x =
+      baseX +
+      randomNumber(Number(id) * RANDOMIZATION_CONFIG.seedXMultiplier + index) *
+        maxOffsetScale;
+    const y =
+      baseY +
+      randomNumber(
+        Number(id) * RANDOMIZATION_CONFIG.seedYMultiplier +
+          index * RANDOMIZATION_CONFIG.seedYOffset,
+      ) *
+        maxOffsetScale;
+
+    return { x, y };
+  };
+
   const ducks = createMemo<IDuckItem[]>(() => {
     const data = props.ducks;
     if (!data || data.length === 0) {
@@ -56,8 +86,7 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     }
 
     return data.map((duck, index) => {
-      const x = (index % ducksPerRow) * (duckWidth + duckGap);
-      const y = Math.floor(index / ducksPerRow) * (duckHeight + duckGap);
+      const { x, y } = generateRandomPosition(index, duck.id);
 
       return {
         id: duck.id?.toString() ?? `duck-${index}`,
