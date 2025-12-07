@@ -9,6 +9,7 @@ import {
 } from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
 import { getUserData, isUserLoggedIn } from "@/helpers/auth.helper";
+import { useSound } from "@/hooks";
 
 export default function Home() {
   const [isCreatingOwnDuck, setIsCreatingOwnDuck] = createSignal(false);
@@ -18,6 +19,7 @@ export default function Home() {
   const navigate = useNavigate();
   const isLoggedIn = isUserLoggedIn();
   const authenticatedUser = getUserData();
+  const { play: playStartSound } = useSound("/sounds/start.mp3");
 
   const circleCommonClasses =
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
@@ -31,6 +33,7 @@ export default function Home() {
   });
 
   const createOwnDuck = () => {
+    playStartSound();
     if (document.startViewTransition) {
       document.startViewTransition(() => {
         setIsCreatingOwnDuck(true);

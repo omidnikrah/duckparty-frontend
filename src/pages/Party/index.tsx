@@ -1,8 +1,9 @@
 import { useNavigate } from "@solidjs/router";
-import { createEffect, createSignal, Show } from "solid-js";
+import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { useGetDucks, useGetUser } from "@/api/generated/endpoints";
 import { Dropdown, DucksCanvas, SetNameDialog } from "@/components";
 import { getUserData } from "@/helpers";
+import { useSound } from "@/hooks";
 
 export default function Party() {
   const getDucks = useGetDucks();
@@ -10,6 +11,11 @@ export default function Party() {
   const [showDialog, setShowDialog] = createSignal(false);
   const navigate = useNavigate();
   const authenticatedUser = getUserData();
+  const { play: playPartyStartSound } = useSound("/sounds/party-intro.mp3");
+
+  onMount(() => {
+    playPartyStartSound();
+  });
 
   createEffect(() => {
     const shouldShow =

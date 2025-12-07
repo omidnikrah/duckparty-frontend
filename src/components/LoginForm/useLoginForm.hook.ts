@@ -1,9 +1,6 @@
 import { createMemo } from "solid-js";
-import {
-  validateEmail,
-  validateVerificationCode,
-} from "@/helpers/form-validation.helper";
-import { useForm } from "@/hooks/useForm.hook";
+import { validateEmail, validateVerificationCode } from "@/helpers";
+import { useForm } from "@/hooks";
 
 interface TLoginFormData {
   email: string;

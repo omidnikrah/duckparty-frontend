@@ -3,8 +3,8 @@ import {
   validateEmail,
   validateName,
   validateVerificationCode,
-} from "@/helpers/form-validation.helper";
-import { useForm } from "@/hooks/useForm.hook";
+} from "@/helpers";
+import { useForm } from "@/hooks";
 import type {
   TDuckFormData,
   TFormErrors,

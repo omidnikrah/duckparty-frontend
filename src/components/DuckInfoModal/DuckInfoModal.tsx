@@ -9,6 +9,7 @@ import type { DuckReactionResponse } from "@/api/generated/schemas/duckReactionR
 import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import { DeleteDuckConfirmationModal, Modal } from "@/components";
 import { getUserData, isUserLoggedIn, timeAgo } from "@/helpers";
+import { useSound } from "@/hooks";
 
 interface IDuckInfoModalProps {
   open: boolean;
@@ -34,6 +35,9 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
   const [showDeleteModal, setShowDeleteModal] = createSignal(false);
   const isLoggedIn = isUserLoggedIn();
   const authenticatedUser = getUserData();
+  const { play: playLikeSound } = useSound("/sounds/like.mp3");
+  const { play: playDislikeSound } = useSound("/sounds/dislike.mp3");
+
   const isMe = createMemo(() => authenticatedUser?.ID === props.data.owner_id);
 
   const updateDucksCache = (data: DuckReactionResponse) => {
@@ -54,6 +58,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
   };
 
   const handleLike = () => {
+    playLikeSound();
     reactionMutation.mutate(
       {
         duckId: props.data.id?.toString()!,
@@ -68,6 +73,7 @@ export const DuckInfoModal = (props: IDuckInfoModalProps): JSX.Element => {
   };
 
   const handleDislike = () => {
+    playDislikeSound();
     reactionMutation.mutate(
       {
         duckId: props.data.id?.toString()!,
