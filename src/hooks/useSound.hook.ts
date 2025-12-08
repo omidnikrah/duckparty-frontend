@@ -1,4 +1,4 @@
-import { createMemo, onCleanup } from "solid-js";
+import { createMemo, createSignal, onCleanup } from "solid-js";
 
 interface UseSoundOptions {
   loop?: boolean;
@@ -7,6 +7,7 @@ interface UseSoundOptions {
 
 export const useSound = (src: string, options: UseSoundOptions = {}) => {
   const { loop = false, volume = 1.0 } = options;
+  const [isPaused, setIsPaused] = createSignal(false);
 
   const audio = createMemo(() => {
     const audioElement = new Audio(src);
@@ -26,17 +27,20 @@ export const useSound = (src: string, options: UseSoundOptions = {}) => {
     audioElement.play().catch((err) => {
       console.error("Audio play failed:", err);
     });
+    setIsPaused(false);
   };
 
   const pause = () => {
     audio().pause();
+    setIsPaused(true);
   };
 
   const stop = () => {
     const audioElement = audio();
     audioElement.pause();
     audioElement.currentTime = 0;
+    setIsPaused(true);
   };
 
-  return { play, pause, stop };
+  return { play, pause, stop, isPaused };
 };
