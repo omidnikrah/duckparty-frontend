@@ -1,7 +1,19 @@
 import { createMemo, onCleanup } from "solid-js";
 
-export const useSound = (src: string) => {
-  const audio = createMemo(() => new Audio(src));
+interface UseSoundOptions {
+  loop?: boolean;
+  volume?: number;
+}
+
+export const useSound = (src: string, options: UseSoundOptions = {}) => {
+  const { loop = false, volume = 1.0 } = options;
+
+  const audio = createMemo(() => {
+    const audioElement = new Audio(src);
+    audioElement.loop = loop;
+    audioElement.volume = Math.max(0, Math.min(1, volume));
+    return audioElement;
+  });
 
   onCleanup(() => {
     const audioElement = audio();

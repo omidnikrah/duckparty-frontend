@@ -12,9 +12,14 @@ export default function Party() {
   const navigate = useNavigate();
   const authenticatedUser = getUserData();
   const { play: playPartyStartSound } = useSound("/sounds/party-intro.mp3");
+  const { play: playPartyYardSound } = useSound("/sounds/party-yard.mp3", {
+    loop: true,
+    volume: 0.2,
+  });
 
   onMount(() => {
     playPartyStartSound();
+    playPartyYardSound();
   });
 
   createEffect(() => {
