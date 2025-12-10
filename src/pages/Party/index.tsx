@@ -1,15 +1,27 @@
 import { useNavigate } from "@solidjs/router";
+import { useQueryClient } from "@tanstack/solid-query";
 import { createEffect, createSignal, onMount, Show } from "solid-js";
-import { useGetDucks, useGetUser } from "@/api/generated/endpoints";
+import {
+  getGetDucksQueryKey,
+  useGetDucks,
+  useGetUser,
+} from "@/api/generated/endpoints";
+import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import MuteIcon from "@/assets/mute.svg";
 import UnmuteIcon from "@/assets/unmute.svg";
 import { Dropdown, DucksCanvas, SetNameDialog } from "@/components";
 import { getUserData } from "@/helpers";
-import { useSound } from "@/hooks";
+import { useSocket, useSound } from "@/hooks";
+import { SocketEvent } from "@/types/socket";
+
+type SocketEventMap = {
+  [SocketEvent.NewDuckCreated]: DuckResponse;
+};
 
 export default function Party() {
   const getDucks = useGetDucks();
   const userInfo = useGetUser();
+  const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = createSignal(false);
   const navigate = useNavigate();
   const authenticatedUser = getUserData();
@@ -21,6 +33,24 @@ export default function Party() {
   } = useSound("/sounds/party-yard.mp3", {
     loop: true,
     volume: 0.2,
+  });
+  useSocket<SocketEventMap>({
+    events: [SocketEvent.NewDuckCreated],
+    handler: (_event, payload) => {
+      queryClient.setQueryData<DuckResponse[]>(
+        getGetDucksQueryKey(),
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          const duckExists = oldData.some((duck) => duck.id === payload.id);
+          if (duckExists) {
+            return oldData;
+          }
+
+          return [payload, ...oldData];
+        },
+      );
+    },
   });
 
   const togglePartyYardSound = () => {
