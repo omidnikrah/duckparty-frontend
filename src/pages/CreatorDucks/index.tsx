@@ -1,8 +1,9 @@
-import { useParams } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 import clsx from "clsx";
 import { createMemo, For, onMount, Show } from "solid-js";
 import { useGetUserUserIdDucks } from "@/api/generated/endpoints";
 import DuckOutline from "@/assets/duck-outline.svg";
+import LeftArrowIcon from "@/assets/left-arrow.svg";
 import { DuckCard, GradientScrollArea } from "@/components";
 import { getUserData } from "@/helpers";
 
@@ -22,7 +23,7 @@ export default function CreatorDucks() {
   const authenticatedUser = getUserData();
   const userDucks = useGetUserUserIdDucks(Number(creatorId));
   const isMe = authenticatedUser?.ID?.toString() === creatorId;
-
+  const navigate = useNavigate();
   const circleCommonClasses =
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
   const circleExpandedClasses =
@@ -58,6 +59,13 @@ export default function CreatorDucks() {
           </GradientScrollArea>
         </div>
       </div>
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        class="fixed top-6 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 opacity-50 shadow-lg transition-all duration-300 hover:scale-110 hover:opacity-100 hover:shadow-xl"
+      >
+        <LeftArrowIcon />
+      </button>
     </div>
   );
 }

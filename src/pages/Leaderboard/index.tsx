@@ -1,10 +1,13 @@
+import { useNavigate } from "@solidjs/router";
 import clsx from "clsx";
 import { For, onMount } from "solid-js";
 import { useGetLeaderboard } from "@/api/generated/endpoints";
+import LeftArrowIcon from "@/assets/left-arrow.svg";
 import { GradientScrollArea, LeaderboardItem } from "@/components";
 
 export default function Leaderboard() {
   const leaderboard = useGetLeaderboard();
+  const navigate = useNavigate();
   const circleCommonClasses =
     "-translate-x-1/2 -translate-y-1/2 absolute inset-0 top-1/2 left-1/2 z-10 flex flex-col items-center justify-center overflow-hidden rounded-full";
   const circleExpandedClasses =
@@ -34,6 +37,13 @@ export default function Leaderboard() {
           </GradientScrollArea>
         </div>
       </div>
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        class="fixed top-6 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 opacity-50 shadow-lg transition-all duration-300 hover:scale-110 hover:opacity-100 hover:shadow-xl"
+      >
+        <LeftArrowIcon />
+      </button>
     </div>
   );
 }
