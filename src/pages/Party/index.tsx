@@ -8,6 +8,7 @@ import {
 } from "@/api/generated/endpoints";
 import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
 import MuteIcon from "@/assets/mute.svg";
+import ReCenterIcon from "@/assets/recenter.svg";
 import UnmuteIcon from "@/assets/unmute.svg";
 import { Dropdown, DucksCanvas, SetNameDialog } from "@/components";
 import { getUserData } from "@/helpers";
@@ -25,6 +26,7 @@ export default function Party() {
   const [showDialog, setShowDialog] = createSignal(false);
   const navigate = useNavigate();
   const authenticatedUser = getUserData();
+  let recenterCanvas: (() => void) | null = null;
   const { play: playPartyStartSound } = useSound("/sounds/party-intro.mp3");
   const {
     play: playPartyYardSound,
@@ -61,6 +63,10 @@ export default function Party() {
     }
   };
 
+  const handleRecenter = () => {
+    recenterCanvas?.();
+  };
+
   onMount(() => {
     playPartyStartSound();
     playPartyYardSound();
@@ -83,7 +89,13 @@ export default function Party() {
 
   return (
     <Show when={!getDucks.isError && !getDucks.isLoading}>
-      <DucksCanvas ducks={getDucks.data} ducksPerRow={5} />
+      <DucksCanvas
+        ducks={getDucks.data}
+        ducksPerRow={5}
+        onRecentered={(fn) => {
+          recenterCanvas = fn;
+        }}
+      />
       <Show when={showDialog()}>
         <SetNameDialog />
       </Show>
@@ -122,6 +134,13 @@ export default function Party() {
           <Show when={isPartyYardSoundPaused()} fallback={<UnmuteIcon />}>
             <MuteIcon />
           </Show>
+        </button>
+        <button
+          type="button"
+          onClick={handleRecenter}
+          class="flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        >
+          <ReCenterIcon />
         </button>
       </div>
     </Show>

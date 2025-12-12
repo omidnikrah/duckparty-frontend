@@ -30,6 +30,7 @@ interface DucksCanvasProps {
   duckGap?: number;
   ducksPerRow?: number;
   debug?: boolean;
+  onRecentered?: (recenter: () => void) => void;
 }
 
 export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
@@ -38,12 +39,13 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   const ducksCache = new Map<string, IDuckItem>();
   const [selectedDuckId, setSelectedDuckId] = createSignal<string | null>(null);
   const [containerReady, setContainerReady] = createSignal(false);
+  const [isTransitioning, setIsTransitioning] = createSignal(false);
   const { isAnimating } = useAnimationControl();
   const authenticatedUser = getUserData();
   const { pan, setPan, isPanning, isMomentumActive, resetPan, eventHandlers } =
     useCanvasPan(() => selectedDuckId());
 
-  const { scale, handleWheel } = useCanvasZoom(pan, setPan);
+  const { scale, setScale, handleWheel } = useCanvasZoom(pan, setPan);
 
   const duckWidth = props.duckWidth ?? CANVAS_CONFIG.defaultItemSize.width;
   const duckHeight = props.duckHeight ?? CANVAS_CONFIG.defaultItemSize.height;
@@ -137,6 +139,18 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     containerReady() ? container : undefined,
   );
 
+  const handleRecenter = () => {
+    resetPan();
+    setIsTransitioning(true);
+    setPan({ x: 0, y: 0 });
+    setScale(1);
+    setTimeout(() => setIsTransitioning(false), 300);
+  };
+
+  onMount(() => {
+    props.onRecentered?.(handleRecenter);
+  });
+
   createEffect(() => {
     const currentId = selectedDuckId();
     const shouldOpen = currentId !== null;
@@ -195,12 +209,18 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
           "cursor-grab": !selectedDuckId() && !isPanning(),
           "cursor-grabbing": isPanning(),
           "cursor-default": !!selectedDuckId(),
+          "transition-all duration-300 ease-out": isTransitioning(),
         },
       )}
       style={backgroundStyle()}
     >
       <div
-        class="backface-hidden pointer-events-none absolute isolate origin-top-left will-change-transform contain-style"
+        class={clsx(
+          "backface-hidden pointer-events-none absolute isolate origin-top-left will-change-transform contain-style",
+          {
+            "transition-transform duration-300 ease-out": isTransitioning(),
+          },
+        )}
         style={{
           transform: canvasTransform(),
         }}
