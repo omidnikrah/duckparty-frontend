@@ -35,6 +35,7 @@ interface DucksCanvasProps {
 export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   let container!: HTMLDivElement;
 
+  const ducksCache = new Map<string, IDuckItem>();
   const [selectedDuckId, setSelectedDuckId] = createSignal<string | null>(null);
   const [containerReady, setContainerReady] = createSignal(false);
   const { isAnimating } = useAnimationControl();
@@ -85,11 +86,19 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
       return [];
     }
 
-    return data.map((duck, index) => {
+    return data.map((duck) => {
+      const duckId = duck.id?.toString() ?? `duck-${duck.id ?? Date.now()}`;
+
+      const cachedDuck = ducksCache.get(duckId);
+      if (cachedDuck) {
+        return cachedDuck;
+      }
+
+      const index = ducksCache.size;
       const { x, y } = generateRandomPosition(index, duck.id);
 
-      return {
-        id: duck.id?.toString() ?? `duck-${index}`,
+      const newDuck: IDuckItem = {
+        id: duckId,
         owner_id: duck.owner_id?.toString() ?? "",
         x,
         y,
@@ -103,6 +112,10 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
         dislikes: duck.dislikes_count ?? 0,
         rank: duck.rank ?? 0,
       };
+
+      ducksCache.set(duckId, newDuck);
+
+      return newDuck;
     });
   });
 
