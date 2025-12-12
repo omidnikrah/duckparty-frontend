@@ -7,6 +7,8 @@ import {
   useGetUser,
 } from "@/api/generated/endpoints";
 import type { DuckResponse } from "@/api/generated/schemas/duckResponse";
+import ExitFullscreenIcon from "@/assets/exit-fullscreen.svg";
+import FullscreenIcon from "@/assets/fullscreen.svg";
 import MuteIcon from "@/assets/mute.svg";
 import ReCenterIcon from "@/assets/recenter.svg";
 import UnmuteIcon from "@/assets/unmute.svg";
@@ -24,6 +26,9 @@ export default function Party() {
   const userInfo = useGetUser();
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = createSignal(false);
+  const [isFullscreen, setIsFullscreen] = createSignal(
+    !!document.fullscreenElement,
+  );
   const navigate = useNavigate();
   const authenticatedUser = getUserData();
   let recenterCanvas: (() => void) | null = null;
@@ -67,9 +72,27 @@ export default function Party() {
     recenterCanvas?.();
   };
 
+  const handleFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  };
+
   onMount(() => {
     playPartyStartSound();
     playPartyYardSound();
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
   });
 
   createEffect(() => {
@@ -141,6 +164,15 @@ export default function Party() {
           class="flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
         >
           <ReCenterIcon />
+        </button>
+        <button
+          type="button"
+          onClick={handleFullscreen}
+          class="flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        >
+          <Show when={isFullscreen()} fallback={<FullscreenIcon />}>
+            <ExitFullscreenIcon />
+          </Show>
         </button>
       </div>
     </Show>
