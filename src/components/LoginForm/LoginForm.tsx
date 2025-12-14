@@ -7,6 +7,7 @@ import {
   usePostUserSetEmail,
   usePostUserVerifySetEmail,
 } from "@/api/generated/endpoints";
+import type { UserResponse } from "@/api/generated/schemas";
 import { Button, ErrorMessage, FormInput } from "@/components";
 import { setAuthToken, setUserData } from "@/helpers";
 import { useLoginForm } from "./useLoginForm.hook";
@@ -17,7 +18,7 @@ enum AuthStep {
 }
 
 interface LoginFormProps {
-  onLoginSuccess?: (userData: { ID?: string | number }) => void;
+  onLoginSuccess?: (userData: UserResponse) => void;
   mode?: "login" | "set-email";
   class?: string;
 }
