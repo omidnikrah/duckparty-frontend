@@ -12,7 +12,7 @@ export const WelcomeScreen = (props: IWelcomeScreenProps) => {
         onClick={props.onCreateClick}
         type="button"
       >
-        Create your own
+        Create your Duck
       </button>
       <span class="cubic-transition h-0 translate-y-2 text-primary opacity-0 transition-all delay-75 group-hover:opacity-20">
         or

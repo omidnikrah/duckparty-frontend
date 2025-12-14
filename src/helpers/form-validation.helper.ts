@@ -41,3 +41,22 @@ export const validateName = (
   return undefined;
 };
 
+export const validateCreatorName = (
+  creatorName: string,
+  minLength: number = NAME_MIN_LENGTH,
+  maxLength: number = NAME_MAX_LENGTH,
+): string | undefined => {
+  if (!creatorName.trim()) {
+    return "Creator name is required";
+  }
+  if (creatorName.trim().length < minLength) {
+    return `Creator name must be at least ${minLength} characters`;
+  }
+  if (creatorName.trim().length > maxLength) {
+    return `Creator name must be no more than ${maxLength} characters`;
+  }
+  if (!/^[a-zA-Z0-9\s\-_]+$/.test(creatorName.trim())) {
+    return "Creator name can only contain letters, numbers, spaces, hyphens, and underscores";
+  }
+  return undefined;
+};

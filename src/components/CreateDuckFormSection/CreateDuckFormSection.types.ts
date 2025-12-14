@@ -1,13 +1,11 @@
 export interface TDuckFormData {
   name: string;
-  email: string;
-  verificationCode: string;
+  creatorName: string;
 }
 
 export interface TFormErrors {
   name?: string;
-  email?: string;
-  verificationCode?: string;
+  creatorName?: string;
 }
 
 export interface TFormState {

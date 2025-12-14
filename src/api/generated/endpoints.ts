@@ -21,7 +21,9 @@ import { useMutation, useQuery } from "@tanstack/solid-query";
 import { customInstance } from "../axios-instance";
 import type {
   AuthenticateRequest,
+  AuthenticateRequestBody,
   AuthenticateResponse,
+  CreateAnonymousUserRequest,
   DeleteDuckDuckId200,
   DeleteDuckDuckId400,
   DeleteDuckDuckId404,
@@ -33,17 +35,23 @@ import type {
   GetUser400,
   GetUserUserIdDucks400,
   GetUserUserIdDucks500,
+  GetWs400,
   PostAuth200,
   PostAuth400,
+  PostAuthAnonymous400,
   PostAuthVerify400,
   PostDuck400,
   PostDuck500,
   PostDuckBody,
+  PostUserSetEmail200,
+  PostUserSetEmail400,
+  PostUserVerifySetEmail400,
   PutDuckDuckIdReactionReaction400,
   PutDuckDuckIdReactionReaction404,
   PutDuckDuckIdReactionReaction409,
   PutDuckDuckIdReactionReaction500,
   PutUserChangeName400,
+  SetEmailRequest,
   UpdateNameRequest,
   UserInfoResponse,
 } from "./schemas";
@@ -141,11 +149,101 @@ export const usePostAuth = <
 };
 
 /**
+ * Creates an anonymous user with a display name and returns a JWT token for immediate use
+ * @summary Create anonymous user and get token
+ */
+export const postAuthAnonymous = (
+  createAnonymousUserRequest: CreateAnonymousUserRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AuthenticateResponse>(
+    {
+      url: `/auth/anonymous`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: createAnonymousUserRequest,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPostAuthAnonymousMutationOptions = <
+  TError = AxiosError<PostAuthAnonymous400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuthAnonymous>>,
+    TError,
+    { data: CreateAnonymousUserRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): SolidMutationOptions<
+  Awaited<ReturnType<typeof postAuthAnonymous>>,
+  TError,
+  { data: CreateAnonymousUserRequest },
+  TContext
+> => {
+  const mutationKey = ["postAuthAnonymous"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postAuthAnonymous>>,
+    { data: CreateAnonymousUserRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postAuthAnonymous(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostAuthAnonymousMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuthAnonymous>>
+>;
+export type PostAuthAnonymousMutationBody = CreateAnonymousUserRequest;
+export type PostAuthAnonymousMutationError = PostAuthAnonymous400;
+
+/**
+ * @summary Create anonymous user and get token
+ */
+export const usePostAuthAnonymous = <
+  TError = AxiosError<PostAuthAnonymous400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuthAnonymous>>,
+    TError,
+    { data: CreateAnonymousUserRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof postAuthAnonymous>>,
+  TError,
+  { data: CreateAnonymousUserRequest },
+  TContext
+> => {
+  const mutationOptions = getPostAuthAnonymousMutationOptions(options);
+
+  return useMutation(() => mutationOptions);
+};
+
+/**
  * Verifies the OTP code and returns user information along with JWT token
  * @summary Verify OTP and authenticate user
  */
 export const postAuthVerify = (
-  authenticateRequest: AuthenticateRequest,
+  authenticateRequestBody: AuthenticateRequestBody,
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal,
 ) => {
@@ -154,7 +252,7 @@ export const postAuthVerify = (
       url: `/auth/verify`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      data: authenticateRequest,
+      data: authenticateRequestBody,
       signal,
     },
     options,
@@ -168,14 +266,14 @@ export const getPostAuthVerifyMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postAuthVerify>>,
     TError,
-    { data: AuthenticateRequest },
+    { data: AuthenticateRequestBody },
     TContext
   >;
   request?: SecondParameter<typeof customInstance>;
 }): SolidMutationOptions<
   Awaited<ReturnType<typeof postAuthVerify>>,
   TError,
-  { data: AuthenticateRequest },
+  { data: AuthenticateRequestBody },
   TContext
 > => {
   const mutationKey = ["postAuthVerify"];
@@ -189,7 +287,7 @@ export const getPostAuthVerifyMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postAuthVerify>>,
-    { data: AuthenticateRequest }
+    { data: AuthenticateRequestBody }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -202,7 +300,7 @@ export const getPostAuthVerifyMutationOptions = <
 export type PostAuthVerifyMutationResult = NonNullable<
   Awaited<ReturnType<typeof postAuthVerify>>
 >;
-export type PostAuthVerifyMutationBody = AuthenticateRequest;
+export type PostAuthVerifyMutationBody = AuthenticateRequestBody;
 export type PostAuthVerifyMutationError = PostAuthVerify400;
 
 /**
@@ -215,14 +313,14 @@ export const usePostAuthVerify = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postAuthVerify>>,
     TError,
-    { data: AuthenticateRequest },
+    { data: AuthenticateRequestBody },
     TContext
   >;
   request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postAuthVerify>>,
   TError,
-  { data: AuthenticateRequest },
+  { data: AuthenticateRequestBody },
   TContext
 > => {
   const mutationOptions = getPostAuthVerifyMutationOptions(options);
@@ -792,6 +890,186 @@ export const usePutUserChangeName = <
 };
 
 /**
+ * Sends an OTP to the new email address for verification. Use /user/verify-email to verify and set the email.
+ * @summary Send OTP to new email address
+ */
+export const postUserSetEmail = (
+  setEmailRequest: SetEmailRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<PostUserSetEmail200>(
+    {
+      url: `/user/set-email`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: setEmailRequest,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPostUserSetEmailMutationOptions = <
+  TError = AxiosError<PostUserSetEmail400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postUserSetEmail>>,
+    TError,
+    { data: SetEmailRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): SolidMutationOptions<
+  Awaited<ReturnType<typeof postUserSetEmail>>,
+  TError,
+  { data: SetEmailRequest },
+  TContext
+> => {
+  const mutationKey = ["postUserSetEmail"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postUserSetEmail>>,
+    { data: SetEmailRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postUserSetEmail(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostUserSetEmailMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postUserSetEmail>>
+>;
+export type PostUserSetEmailMutationBody = SetEmailRequest;
+export type PostUserSetEmailMutationError = PostUserSetEmail400;
+
+/**
+ * @summary Send OTP to new email address
+ */
+export const usePostUserSetEmail = <
+  TError = AxiosError<PostUserSetEmail400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postUserSetEmail>>,
+    TError,
+    { data: SetEmailRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof postUserSetEmail>>,
+  TError,
+  { data: SetEmailRequest },
+  TContext
+> => {
+  const mutationOptions = getPostUserSetEmailMutationOptions(options);
+
+  return useMutation(() => mutationOptions);
+};
+
+/**
+ * Verifies the OTP code and sets the email address for the authenticated user. Returns updated user and new token.
+ * @summary Verify email change with OTP
+ */
+export const postUserVerifySetEmail = (
+  authenticateRequestBody: AuthenticateRequestBody,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AuthenticateResponse>(
+    {
+      url: `/user/verify-set-email`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: authenticateRequestBody,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPostUserVerifySetEmailMutationOptions = <
+  TError = AxiosError<PostUserVerifySetEmail400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postUserVerifySetEmail>>,
+    TError,
+    { data: AuthenticateRequestBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): SolidMutationOptions<
+  Awaited<ReturnType<typeof postUserVerifySetEmail>>,
+  TError,
+  { data: AuthenticateRequestBody },
+  TContext
+> => {
+  const mutationKey = ["postUserVerifySetEmail"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postUserVerifySetEmail>>,
+    { data: AuthenticateRequestBody }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postUserVerifySetEmail(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostUserVerifySetEmailMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postUserVerifySetEmail>>
+>;
+export type PostUserVerifySetEmailMutationBody = AuthenticateRequestBody;
+export type PostUserVerifySetEmailMutationError = PostUserVerifySetEmail400;
+
+/**
+ * @summary Verify email change with OTP
+ */
+export const usePostUserVerifySetEmail = <
+  TError = AxiosError<PostUserVerifySetEmail400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postUserVerifySetEmail>>,
+    TError,
+    { data: AuthenticateRequestBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof postUserVerifySetEmail>>,
+  TError,
+  { data: AuthenticateRequestBody },
+  TContext
+> => {
+  const mutationOptions = getPostUserVerifySetEmailMutationOptions(options);
+
+  return useMutation(() => mutationOptions);
+};
+
+/**
  * Returns a list of all ducks owned by the specified user, ordered by creation date
  * @summary Get list of ducks for a specific user
  */
@@ -867,6 +1145,67 @@ export function useGetUserUserIdDucks<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetUserUserIdDucksQueryOptions(userId, options);
+
+  const query = useQuery(() => queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * Establishes a WebSocket connection to receive real-time notifications when new ducks are added
+ * @summary WebSocket connection for real-time duck notifications
+ */
+export const getWs = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<unknown>(
+    { url: `/ws`, method: "GET", signal },
+    options,
+  );
+};
+
+export const getGetWsQueryKey = () => {
+  return [`/ws`] as const;
+};
+
+export const getGetWsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWs>>,
+  TError = AxiosError<void | GetWs400>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData> & { queryKey: QueryKey };
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetWsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWs>>> = ({
+    signal,
+  }) => getWs(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } ;
+};
+
+export type GetWsQueryResult = NonNullable<Awaited<ReturnType<typeof getWs>>>;
+export type GetWsQueryError = void | GetWs400;
+
+/**
+ * @summary WebSocket connection for real-time duck notifications
+ */
+
+export function useGetWs<
+  TData = Awaited<ReturnType<typeof getWs>>,
+  TError = AxiosError<void | GetWs400>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getWs>>, TError, TData> & { queryKey: QueryKey };
+  request?: SecondParameter<typeof customInstance>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetWsQueryOptions(options);
 
   const query = useQuery(() => queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

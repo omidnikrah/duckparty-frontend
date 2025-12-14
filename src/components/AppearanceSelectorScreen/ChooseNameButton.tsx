@@ -23,7 +23,7 @@ export const ChooseNameButton = (props: IChooseNameButtonProps) => {
           class="-translate-x-1/2 choose-name-btn fixed bottom-10 left-1/2 z-100 rounded-full bg-primary px-8 py-4 font-family-carter text-2xl text-white shadow-[0_10px_20px_5px_color-mix(in_srgb,var(--color-primary),transparent_50%)] transition-transform hover:scale-105"
           onClick={props.onChooseNameClick}
         >
-          Choose name
+          Finish styling
         </button>
       </Portal>
     </Show>

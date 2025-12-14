@@ -14,7 +14,7 @@ export * from "./LeaderboardItem";
 export * from "./LoginForm";
 export * from "./MobileOverlay";
 export * from "./Modal";
-export * from "./SetNameDialog";
+export * from "./SetEmailDialog";
 export * from "./ShareDuckModal";
 export * from "./Tab";
 export * from "./WelcomeScreen";

@@ -1,9 +1,5 @@
-import { createEffect, createMemo, createSignal, Show } from "solid-js";
-import {
-  usePostAuth,
-  usePostAuthVerify,
-  usePostDuck,
-} from "@/api/generated/endpoints";
+import { createMemo, createSignal, Show } from "solid-js";
+import { usePostAuthAnonymous, usePostDuck } from "@/api/generated/endpoints";
 import { Button, ErrorMessage, FormInput } from "@/components";
 import {
   getUserData,
@@ -20,70 +16,41 @@ interface CreateDuckFormSectionProps {
   onChangeStyleClick?: () => void;
   onDuckCreated?: (duckData: {
     name: string;
-    email: string;
+    email?: string;
+    ownerName: string;
     appearance: TAppearanceState;
   }) => void;
-}
-
-enum AuthStep {
-  EMAIL = "email",
-  VERIFICATION = "verification",
 }
 
 export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
   const isLoggedIn = isUserLoggedIn();
 
   const appearanceStore = useAppearanceStore();
-  const [authStep, setAuthStep] = createSignal<AuthStep>(
-    isLoggedIn ? AuthStep.VERIFICATION : AuthStep.EMAIL,
-  );
   const [isCreatingDuck, setIsCreatingDuck] = createSignal(false);
   const { formState, updateField, getFieldError, markFieldAsTouched } =
-    useDuckForm(isLoggedIn, authStep() === AuthStep.VERIFICATION);
+    useDuckForm(isLoggedIn);
 
-  const authMutation = usePostAuth();
-  const verificationMutation = usePostAuthVerify();
   const duckMutation = usePostDuck();
+  const anonymousUserMutation = usePostAuthAnonymous();
 
   const isLoading = createMemo(() => {
-    return (!isLoggedIn && authMutation.isPending) || isCreatingDuck();
+    return (!isLoggedIn && anonymousUserMutation.isPending) || isCreatingDuck();
   });
 
-  const getButtonText = () => {
-    if (authStep() === AuthStep.EMAIL) {
-      return "Create Duck";
-    }
-    return "Jump into the party";
-  };
-
-  createEffect(() => {
-    const token = verificationMutation.data?.token;
-    if (token) {
-      setAuthToken(token);
-      setUserData(verificationMutation.data?.user ?? {});
-    }
-  });
-
-  const getEmail = () => formState().data.email.trim();
+  const getCreatorName = () => formState().data.creatorName.trim();
   const getDuckName = () => formState().data.name.trim();
-  const getVerificationCode = () => formState().data.verificationCode.trim();
 
-  const handleEmailAuth = async () => {
-    await authMutation.mutateAsync({
+  const handleCreateAnonymousUser = async () => {
+    const response = await anonymousUserMutation.mutateAsync({
       data: {
-        email: getEmail(),
+        name: getCreatorName(),
       },
     });
-    setAuthStep(AuthStep.VERIFICATION);
-  };
 
-  const handleVerification = async () => {
-    await verificationMutation.mutateAsync({
-      data: {
-        email: getEmail(),
-        otp: getVerificationCode(),
-      },
-    });
+    if (response?.token && response?.user) {
+      setAuthToken(response.token);
+      setUserData(response.user);
+    }
   };
 
   const handleCreateDuck = async () => {
@@ -108,7 +75,8 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
     const userData = getUserData();
     props.onDuckCreated?.({
       name: getDuckName(),
-      email: isLoggedIn ? (userData?.email ?? "") : getEmail(),
+      email: isLoggedIn ? userData?.email : undefined,
+      ownerName: getCreatorName(),
       appearance,
     });
   };
@@ -121,24 +89,15 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
     }
 
     try {
-      const currentStep = authStep();
-
-      if (isLoggedIn) {
-        setIsCreatingDuck(true);
-        await handleCreateDuck();
-      } else if (currentStep === AuthStep.EMAIL) {
-        await handleEmailAuth();
-      } else if (
-        currentStep === AuthStep.VERIFICATION &&
-        getVerificationCode()
-      ) {
-        setIsCreatingDuck(true);
-        await handleVerification();
-        await handleCreateDuck();
+      setIsCreatingDuck(true);
+      if (!isLoggedIn) {
+        await handleCreateAnonymousUser();
       }
+      await handleCreateDuck();
     } catch (error) {
       console.error("Failed to create duck:", error);
     } finally {
+      setIsCreatingDuck(false);
     }
   };
 
@@ -153,7 +112,7 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
           id="duck-name"
           name="name"
           type="text"
-          placeholder="Enter your cool duck name"
+          placeholder="Duck name"
           value={formState().data.name}
           error={getFieldError("name")}
           required
@@ -161,44 +120,23 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
           onBlur={() => markFieldAsTouched("name")}
         />
 
-        <Show when={!isLoggedIn && !authMutation.data}>
+        <Show when={!isLoggedIn}>
           <FormInput
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            value={formState().data.email}
-            error={getFieldError("email")}
-            required
-            onInput={(value) => updateField("email", value)}
-            onBlur={() => markFieldAsTouched("email")}
-          />
-        </Show>
-
-        <Show
-          when={!isLoggedIn && !!authMutation.data && !authMutation.isPending}
-        >
-          <FormInput
-            id="verification-code"
-            name="verificationCode"
+            id="owner-name"
+            name="ownerName"
             type="text"
-            placeholder="Enter your verification code"
-            value={formState().data.verificationCode}
-            error={getFieldError("verificationCode")}
+            placeholder="Creator name"
+            value={formState().data.creatorName}
+            error={getFieldError("creatorName")}
             required
-            onInput={(value) => updateField("verificationCode", value)}
-            onBlur={() => markFieldAsTouched("verificationCode")}
+            onInput={(value) => updateField("creatorName", value)}
+            onBlur={() => markFieldAsTouched("creatorName")}
           />
         </Show>
 
-        <Show when={authMutation.isError}>
+        <Show when={anonymousUserMutation.isError}>
           <ErrorMessage>
-            {authMutation.error?.response?.data?.error}
-          </ErrorMessage>
-        </Show>
-        <Show when={verificationMutation.isError}>
-          <ErrorMessage>
-            {verificationMutation.error?.response?.data?.error}
+            {anonymousUserMutation.error?.response?.data?.error}
           </ErrorMessage>
         </Show>
         <Show when={duckMutation.isError}>
@@ -223,7 +161,7 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
           isLoading={isLoading()}
           onClick={handleSubmit}
         >
-          {getButtonText()}
+          Jump into the party
         </Button>
       </div>
     </div>

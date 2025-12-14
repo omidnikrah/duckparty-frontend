@@ -1,9 +1,5 @@
 import { createMemo, createSignal } from "solid-js";
-import {
-  validateEmail,
-  validateName,
-  validateVerificationCode,
-} from "@/helpers";
+import { validateCreatorName, validateName } from "@/helpers";
 import { useForm } from "@/hooks";
 import type {
   TDuckFormData,
@@ -11,10 +7,7 @@ import type {
   TFormState,
 } from "./CreateDuckFormSection.types";
 
-export const useDuckForm = (
-  isLoggedIn: boolean = false,
-  isVerification: boolean = false,
-) => {
+export const useDuckForm = (isLoggedIn: boolean = false) => {
   const [isSubmitting, setIsSubmitting] = createSignal(false);
 
   const {
@@ -28,33 +21,21 @@ export const useDuckForm = (
   } = useForm<TDuckFormData>({
     initialData: {
       name: "",
-      email: "",
-      verificationCode: "",
+      creatorName: "",
     },
     fieldConfig: {
       name: {
         validator: validateName,
       },
-      email: {
-        validator: validateEmail,
-        shouldValidate: () => !isLoggedIn,
-      },
-      verificationCode: {
-        validator: validateVerificationCode,
-        shouldValidate: () => !isLoggedIn,
+      creatorName: {
+        validator: validateName,
       },
     },
     isValidFn: (data) => {
       if (isLoggedIn) {
         return !validateName(data.name);
       }
-      return (
-        !validateName(data.name) &&
-        !validateEmail(data.email) &&
-        (isVerification
-          ? !validateVerificationCode(data.verificationCode)
-          : true)
-      );
+      return !validateName(data.name) && !validateCreatorName(data.creatorName);
     },
   });
 
@@ -70,8 +51,8 @@ export const useDuckForm = (
     switch (field) {
       case "name":
         return validateName(data.name);
-      case "email":
-        return validateEmail(data.email);
+      case "creatorName":
+        return validateName(data.creatorName);
       default:
         return undefined;
     }

@@ -199,44 +199,44 @@ input {
   z-index: 100;
 }
 
-.set-name-dialog {
-  view-transition-name: set-name-dialog;
+.set-email-dialog {
+  view-transition-name: set-email-dialog;
 }
 
-::view-transition-old(set-name-dialog),
-::view-transition-new(set-name-dialog) {
+::view-transition-old(set-email-dialog),
+::view-transition-new(set-email-dialog) {
   animation-duration: 0.4s;
   animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-::view-transition-old(set-name-dialog) {
-  animation-name: slide-out-to-top;
+::view-transition-old(set-email-dialog) {
+  animation-name: slide-out-to-bottom;
 }
 
-::view-transition-new(set-name-dialog) {
+::view-transition-new(set-email-dialog) {
   animation-delay: 1s;
-  animation-name: slide-in-from-top;
+  animation-name: slide-in-from-bottom;
 }
 
-@keyframes slide-in-from-top {
+@keyframes slide-in-from-bottom {
   0% {
     opacity: 0;
-    transform: translateY(-100%);
+    transform: translateY(100%) scale(0.9);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes slide-out-to-top {
+@keyframes slide-out-to-bottom {
   0% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-100%);
+    transform: translateY(100%) scale(0.9);
   }
 }
 

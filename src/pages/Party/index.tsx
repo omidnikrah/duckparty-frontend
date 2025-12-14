@@ -12,7 +12,7 @@ import FullscreenIcon from "@/assets/fullscreen.svg";
 import MuteIcon from "@/assets/mute.svg";
 import ReCenterIcon from "@/assets/recenter.svg";
 import UnmuteIcon from "@/assets/unmute.svg";
-import { Dropdown, DucksCanvas, SetNameDialog } from "@/components";
+import { Dropdown, DucksCanvas, SetEmailDialog } from "@/components";
 import { getUserData } from "@/helpers";
 import { useSocket, useSound } from "@/hooks";
 import { SocketEvent } from "@/types/socket";
@@ -96,8 +96,7 @@ export default function Party() {
   });
 
   createEffect(() => {
-    const shouldShow =
-      !userInfo.data?.user?.display_name && !userInfo.isLoading;
+    const shouldShow = !userInfo.data?.user?.email && !userInfo.isLoading;
 
     if (shouldShow !== showDialog()) {
       if (document.startViewTransition) {
@@ -120,7 +119,7 @@ export default function Party() {
         }}
       />
       <Show when={showDialog()}>
-        <SetNameDialog />
+        <SetEmailDialog />
       </Show>
       <div class="fixed top-6 left-6 z-600 flex items-center gap-4">
         <Dropdown
