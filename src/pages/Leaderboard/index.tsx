@@ -4,6 +4,7 @@ import { For, onMount } from "solid-js";
 import { useGetLeaderboard } from "@/api/generated/endpoints";
 import LeftArrowIcon from "@/assets/left-arrow.svg";
 import { GradientScrollArea, LeaderboardItem } from "@/components";
+import { startViewTransition } from "@/helpers";
 
 export default function Leaderboard() {
   const leaderboard = useGetLeaderboard();
@@ -39,7 +40,11 @@ export default function Leaderboard() {
       </div>
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          startViewTransition(() => {
+            navigate(-1);
+          });
+        }}
         class="fixed top-6 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 opacity-50 shadow-lg transition-all duration-300 hover:scale-110 hover:opacity-100 hover:shadow-xl"
       >
         <LeftArrowIcon />

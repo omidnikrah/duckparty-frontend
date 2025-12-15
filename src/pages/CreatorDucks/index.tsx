@@ -5,7 +5,7 @@ import { useGetUserUserIdDucks } from "@/api/generated/endpoints";
 import DuckOutline from "@/assets/duck-outline.svg";
 import LeftArrowIcon from "@/assets/left-arrow.svg";
 import { DuckCard, GradientScrollArea } from "@/components";
-import { getUserData } from "@/helpers";
+import { getUserData, startViewTransition } from "@/helpers";
 
 const NoDucks = () => {
   return (
@@ -61,7 +61,11 @@ export default function CreatorDucks() {
       </div>
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          startViewTransition(() => {
+            navigate(-1);
+          });
+        }}
         class="fixed top-6 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-white p-4 text-purple-700 text-purple-700 opacity-50 shadow-lg transition-all duration-300 hover:scale-110 hover:opacity-100 hover:shadow-xl"
       >
         <LeftArrowIcon />

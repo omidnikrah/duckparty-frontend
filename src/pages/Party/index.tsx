@@ -13,7 +13,7 @@ import MuteIcon from "@/assets/mute.svg";
 import ReCenterIcon from "@/assets/recenter.svg";
 import UnmuteIcon from "@/assets/unmute.svg";
 import { Dropdown, DucksCanvas, SetEmailDialog } from "@/components";
-import { getUserData } from "@/helpers";
+import { getUserData, startViewTransition } from "@/helpers";
 import { useSocket, useSound } from "@/hooks";
 import { SocketEvent } from "@/types/socket";
 
@@ -96,16 +96,13 @@ export default function Party() {
   });
 
   createEffect(() => {
-    const shouldShow = !userInfo.data?.user?.email && !userInfo.isLoading;
+    const shouldShow =
+      !userInfo.data?.user?.email && !userInfo.isLoading && !userInfo.error;
 
     if (shouldShow !== showDialog()) {
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          setShowDialog(shouldShow);
-        });
-      } else {
+      startViewTransition(() => {
         setShowDialog(shouldShow);
-      }
+      });
     }
   });
 

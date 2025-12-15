@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import type { JSX } from "solid-js";
 import { createMemo, createSignal, For, onMount } from "solid-js";
+import { startViewTransition } from "@/helpers";
 
 interface ITabItem {
   id: string;
@@ -25,13 +26,9 @@ export const Tab = (props: ITabProps) => {
 
   const handleTabClick = (tabId: string) => {
     if (tabId !== activeTab()) {
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          setActiveTab(tabId);
-        });
-      } else {
+      startViewTransition(() => {
         setActiveTab(tabId);
-      }
+      });
     }
   };
 

@@ -8,7 +8,7 @@ import {
   WelcomeScreen,
 } from "@/components";
 import { AppearanceSelectorScreen } from "@/components/AppearanceSelectorScreen";
-import { getUserData, isUserLoggedIn } from "@/helpers/auth.helper";
+import { getUserData, isUserLoggedIn, startViewTransition } from "@/helpers";
 import { useSound } from "@/hooks";
 
 export default function Home() {
@@ -34,48 +34,32 @@ export default function Home() {
 
   const createOwnDuck = () => {
     playStartSound();
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        setIsCreatingOwnDuck(true);
-      });
-    } else {
+    startViewTransition(() => {
       setIsCreatingOwnDuck(true);
-    }
+    });
   };
 
   const handleOnChangeStyleClick = () => {
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        setIsChoosingName(false);
-      });
-    } else {
+    startViewTransition(() => {
       setIsChoosingName(false);
-    }
+    });
   };
 
   const handleOnChooseNameClick = () => {
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        setIsChoosingName(true);
-      });
-    } else {
+    startViewTransition(() => {
       setIsChoosingName(true);
-    }
+    });
   };
 
   const handleOnDuckCreated = () => {
     setIsLoadingParty(true);
 
-    if (document.startViewTransition) {
-      document.body.style.backgroundColor = "var(--color-yard-green)";
-      document.startViewTransition(() => {
-        setTimeout(() => {
-          navigate("/party", { replace: true });
-        }, 200);
-      });
-    } else {
-      navigate("/party", { replace: true });
-    }
+    document.body.style.backgroundColor = "var(--color-yard-green)";
+    startViewTransition(() => {
+      setTimeout(() => {
+        navigate("/party", { replace: true });
+      }, 200);
+    });
   };
 
   const handleOnManageClick = () => {
@@ -84,13 +68,9 @@ export default function Home() {
       return;
     }
 
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        setIsDirectLogin(true);
-      });
-    } else {
+    startViewTransition(() => {
       setIsDirectLogin(true);
-    }
+    });
   };
 
   const handleOnLoginSuccess = (userData: { ID?: string | number }) => {

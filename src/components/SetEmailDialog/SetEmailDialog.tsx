@@ -1,11 +1,14 @@
 import { useNavigate } from "@solidjs/router";
 import { Button } from "@/components";
+import { startViewTransition } from "@/helpers";
 
 export const SetEmailDialog = () => {
   const navigate = useNavigate();
 
   const handleSaveMyDuck = () => {
-    navigate("/set-email");
+    startViewTransition(() => {
+      navigate("/set-email");
+    });
   };
 
   return (
