@@ -1,5 +1,7 @@
+import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import { Tab } from "@/components";
 import { ChooseNameButton } from "@/components/AppearanceSelectorScreen/ChooseNameButton";
+import { useAppearanceStore } from "@/stores";
 import { AccessoriesSelectorTab } from "./AccessoriesSelectorTab";
 import { SkinSelectorTab } from "./SkinSelectorTab";
 
@@ -10,6 +12,20 @@ interface IAppearanceSelectorScreenProps {
 export const AppearanceSelectorScreen = (
   props: IAppearanceSelectorScreenProps,
 ) => {
+  const { state } = useAppearanceStore();
+
+  const [shouldAnimateAccessoriesTab, setShouldAnimateAccessoriesTab] =
+    createSignal(false);
+  createEffect(() => {
+    if (state().selectedSkin && !state().selectedAccessories.length) {
+      setShouldAnimateAccessoriesTab(true);
+
+      setTimeout(() => {
+        setShouldAnimateAccessoriesTab(false);
+      }, 400);
+    }
+  });
+
   return (
     <div class="spring-transition absolute inset-0 z-10 flex h-fit flex-row items-center justify-center">
       <Tab
@@ -23,6 +39,7 @@ export const AppearanceSelectorScreen = (
             id: "accessories",
             label: "Accessories",
             content: <AccessoriesSelectorTab />,
+            shouldAnimate: shouldAnimateAccessoriesTab(),
           },
         ]}
       />

@@ -6,6 +6,11 @@ interface ITabItem {
   id: string;
   label: string;
   content: JSX.Element;
+  /**
+   * When true, this tab button will get the pulse animation class.
+   * The logic for toggling this flag lives in the parent component.
+   */
+  shouldAnimate?: boolean;
 }
 
 interface ITabProps {
@@ -53,6 +58,7 @@ export const Tab = (props: ITabProps) => {
                 "inline-flex rounded-full bg-gray px-4 py-2 text-gray-700 text-lg transition-colors duration-300",
                 {
                   "bg-primary text-white": activeTab() === item.id,
+                  "pulse-scale-once": item.shouldAnimate,
                 },
               )}
               onClick={() => handleTabClick(item.id)}
