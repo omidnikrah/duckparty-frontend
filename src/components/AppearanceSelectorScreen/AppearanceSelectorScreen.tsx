@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { Tab } from "@/components";
 import { ChooseNameButton } from "@/components/AppearanceSelectorScreen/ChooseNameButton";
 import { useAppearanceStore } from "@/stores";

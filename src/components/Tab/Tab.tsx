@@ -6,10 +6,6 @@ interface ITabItem {
   id: string;
   label: string;
   content: JSX.Element;
-  /**
-   * When true, this tab button will get the pulse animation class.
-   * The logic for toggling this flag lives in the parent component.
-   */
   shouldAnimate?: boolean;
 }
 
