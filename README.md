@@ -2,7 +2,7 @@
 
 > Build a ridiculous duck, give it style, and flex it like it owns the internet.
 
-A modern, interactive web application for creating and customizing ducks with various skins and accessories. Join the party and see your duck alongside others in a vibrant virtual yard.
+Ever wanted to create a duck that's more stylish than you? Well, now you can! Dress up your feathered friend in everything from astronaut helmets to Batman capes, then throw them into a virtual yard where they'll party with other ducks (and probably judge your fashion choices).
 
 ## 🔗 Back-end
 
