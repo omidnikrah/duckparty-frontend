@@ -10,6 +10,7 @@ export * from "./DucksCanvas";
 export * from "./ErrorMessage";
 export * from "./FormInput";
 export * from "./GradientScrollArea";
+export * from "./GithubStarButton";
 export * from "./LeaderboardItem";
 export * from "./LoginForm";
 export * from "./MobileOverlay";

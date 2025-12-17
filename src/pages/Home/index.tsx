@@ -4,6 +4,7 @@ import { createSignal, onMount, Show } from "solid-js";
 import {
   CreateDuckFormSection,
   Duck,
+  GithubStarButton,
   LoginForm,
   WelcomeScreen,
 } from "@/components";
@@ -80,7 +81,8 @@ export default function Home() {
   };
 
   return (
-    <div class="relative flex h-full w-full shrink-0 scale-fade-in-enter items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[length:60vh] after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-repeat after:opacity-5 after:content-['']">
+    <div class="relative flex h-full w-full shrink-0 scale-fade-in-enter items-start justify-center bg-[radial-gradient(50%_50%_at_50%_50%,var(--color-primary)_0%,var(--color-primary-700)_100%)] pt-[50dvh] after:pointer-events-none after:absolute after:inset-0 after:bg-[url('/bg-pattern.png')] after:bg-center after:bg-size-[60vh] after:bg-repeat after:opacity-5 after:content-['']">
+      <GithubStarButton class="absolute top-4 right-4" />
       <Duck isVisible={!isLoadingParty()} />
       <div
         class={clsx(

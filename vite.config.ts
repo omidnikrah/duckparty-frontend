@@ -5,7 +5,17 @@ import solid from "vite-plugin-solid";
 import solidSvg from "vite-plugin-solid-svg";
 
 export default defineConfig({
-  plugins: [solid(), tailwindcss(), solidSvg()],
+  plugins: [
+    solid(),
+    tailwindcss(),
+    solidSvg({
+      svgo: {
+        svgoConfig: {
+          plugins: [],
+        },
+      },
+    }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
