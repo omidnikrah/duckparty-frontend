@@ -75,7 +75,15 @@ export const CreateDuckFormSection = (props: CreateDuckFormSectionProps) => {
     await duckMutation.mutateAsync({
       data: {
         name: getDuckName(),
-        appearance: JSON.stringify(appearance),
+        // Backend's DuckAppearance expects {skin, accessories} with
+        // underscored enum values (e.g. "flower_crown"), not this store's
+        // {selectedSkin, selectedAccessories} with hyphenated ids.
+        appearance: JSON.stringify({
+          skin: appearance.selectedSkin?.replace(/-/g, "_") ?? null,
+          accessories: appearance.selectedAccessories.map((id) =>
+            id.replace(/-/g, "_"),
+          ),
+        }),
         image: duckImage,
       },
     });
