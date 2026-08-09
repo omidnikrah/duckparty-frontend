@@ -110,7 +110,6 @@ export default function Party() {
     <Show when={!getDucks.isError && !getDucks.isLoading}>
       <DucksCanvas
         ducks={getDucks.data}
-        ducksPerRow={5}
         onRecentered={(fn) => {
           recenterCanvas = fn;
         }}

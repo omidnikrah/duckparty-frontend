@@ -16,7 +16,6 @@ export const CANVAS_CONFIG: ICanvasConfig = {
     height: 250,
   },
   defaultItemGap: 30,
-  defaultItemsPerRow: 25,
   duckAnimationTypes: [
     "float",
     "dance",

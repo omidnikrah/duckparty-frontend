@@ -50,7 +50,13 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
   const duckWidth = props.duckWidth ?? CANVAS_CONFIG.defaultItemSize.width;
   const duckHeight = props.duckHeight ?? CANVAS_CONFIG.defaultItemSize.height;
   const duckGap = props.duckGap ?? CANVAS_CONFIG.defaultItemGap;
-  const ducksPerRow = props.ducksPerRow ?? CANVAS_CONFIG.defaultItemsPerRow;
+
+  const ducksPerRow = createMemo(() => {
+    if (props.ducksPerRow) return props.ducksPerRow;
+
+    const count = props.ducks?.length ?? 0;
+    return Math.max(1, Math.ceil(Math.sqrt(count)));
+  });
 
   const randomNumber = (seed: number) => {
     return Math.sin(seed) * Math.random() * RANDOMIZATION_CONFIG.randomScale;
@@ -60,8 +66,8 @@ export const DucksCanvas = (props: DucksCanvasProps = {}): JSX.Element => {
     index: number,
     duckId: number | string | undefined,
   ): { x: number; y: number } => {
-    const baseX = (index % ducksPerRow) * (duckWidth + duckGap);
-    const baseY = Math.floor(index / ducksPerRow) * (duckHeight + duckGap);
+    const baseX = (index % ducksPerRow()) * (duckWidth + duckGap);
+    const baseY = Math.floor(index / ducksPerRow()) * (duckHeight + duckGap);
 
     const id = duckId ?? index;
     const maxOffset = (duckWidth + duckGap) * RANDOMIZATION_CONFIG.offsetRange;

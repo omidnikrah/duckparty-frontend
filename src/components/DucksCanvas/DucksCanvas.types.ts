@@ -46,6 +46,5 @@ export interface ICanvasConfig {
     height: number;
   };
   defaultItemGap: number;
-  defaultItemsPerRow: number;
   duckAnimationTypes: string[];
 }
